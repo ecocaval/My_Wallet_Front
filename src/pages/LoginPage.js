@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { StyledMain, Wrapper } from "../styles/LoginPageStyle";
+import { StyledMain, Wrapper } from "../styles/LoginRegisterPageStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledLink } from "../styles/StyledLinkStyle";
 import Logo from "../components/Logo";
+import { Link } from "react-router-dom";
 
 export default function LoginPage() {
 
@@ -25,15 +26,15 @@ export default function LoginPage() {
                 <Logo />
                 <form onSubmit={sendLogin}>
                     <StyledInput
-                        value={userLogin}
                         placeholder="E-mail"
                         type="email"
+                        value={userLogin}
                         onChange={(e) => setUserLogin(e.currentTarget.value)}
                     />
                     <StyledInput
-                        value={userPassword}
                         placeholder="Senha"
                         type="password"
+                        value={userPassword}
                         onChange={(e) => setUserPassword(e.currentTarget.value)}
                     />
 
@@ -44,7 +45,9 @@ export default function LoginPage() {
                     </StyledButton>
 
                     <StyledLink>
-                        Primeira vez? Cadastra-se!
+                        <Link to="/cadastro">
+                            Primeira vez? Cadastra-se!
+                        </Link>
                     </StyledLink>
                 </form>
             </StyledMain>

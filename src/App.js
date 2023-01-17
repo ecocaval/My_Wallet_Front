@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Logo from "./components/Logo"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import LoginPage from "./pages/LoginPage.js"
+import RegisterPage from "./pages/RegisterPage.js"
 
 export default function App() {
     return(
@@ -14,6 +15,10 @@ export default function App() {
                         <Route
                             path="/"
                             element={<LoginPage/>}
+                        />
+                        <Route
+                            path="/cadastro"
+                            element={<RegisterPage/>}
                         />
                     </Routes>
                 </BrowserRouter>

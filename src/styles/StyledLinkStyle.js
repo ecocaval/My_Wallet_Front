@@ -1,9 +1,12 @@
 import styled from "styled-components"
 
-export const StyledLink = styled.a`
-    font-family: 'Raleway';
-    font-weight: 700;
+export const StyledLink = styled.div`
     margin: auto;
     margin-top: 30px;
-    color: #FFFFFF;
+    > a {
+        font-family: 'Raleway';
+        font-weight: 700;
+        text-decoration: none;
+        color: #FFFFFF;
+    }
 `
