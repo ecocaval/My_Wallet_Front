@@ -1,14 +1,17 @@
 import { useState } from "react";
-import { Wrapper } from "../styles/GenericWrapperStyle";
-import { StyledMain } from "../styles/StyledMainStyle";
-import { StyledButton } from "../styles/StyledButtonStyle";
-import { StyledInput } from "../styles/StyledInputStyle";
-import { StyledLink } from "../styles/StyledLinkStyle";
-import Logo from "../components/Logo";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+import Logo from "../components/Logo.js";
+
+import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
+import { StyledMain } from "../styles/StyledMainStyle.js";
+import { StyledButton } from "../styles/StyledButtonStyle.js";
+import { StyledInput } from "../styles/StyledInputStyle.js";
+import { StyledLink } from "../styles/StyledLinkStyle.js";
 
 export default function LoginPage() {
 
+    const navigate = useNavigate()
     const [userLogin, setUserLogin] = useState("")
     const [userPassword, setUserPassword] = useState("")
 
@@ -19,10 +22,12 @@ export default function LoginPage() {
         // console.log(userPassword);
 
         // * put axios request here
+
+        navigate("/home") //! Temporaty - must have validation
     }
 
     return (
-        <Wrapper>
+        <CenteredWrapper>
             <StyledMain>
                 <Logo />
                 <form onSubmit={sendLogin}>
@@ -52,6 +57,6 @@ export default function LoginPage() {
                     </StyledLink>
                 </form>
             </StyledMain>
-        </Wrapper>
+        </CenteredWrapper>
     )
 }

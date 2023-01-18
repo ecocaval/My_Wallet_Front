@@ -12,5 +12,6 @@ const StyledH1 = styled.h1`
     font-family: 'Saira Stencil One';
     font-size: 32px;
     margin: auto;
+    margin-bottom: 30px;
     color: #FFFFFF;
 `

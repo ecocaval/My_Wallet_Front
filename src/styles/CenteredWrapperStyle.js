@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const Wrapper = styled.div`
+export const CenteredWrapper = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;

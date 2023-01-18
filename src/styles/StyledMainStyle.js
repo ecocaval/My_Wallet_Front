@@ -7,7 +7,6 @@ export const StyledMain = styled.main`
     /* border: 2px blue solid; //! Temporary */
 
     > form {
-        margin-top: 20px;
         display: flex;
         flex-direction: column;
     }

@@ -5,7 +5,7 @@ export const StyledInput = styled.input`
     border-radius: 5px;
     width: 326px;
     height: 58px;
-    margin: 10px 0px;
+    margin-bottom: 20px;
     border: none;
     padding: 10px;
     font-family: 'Raleway';

@@ -6,6 +6,7 @@ export const StyledButton = styled.button`
     border: none;
     width: 326px;
     height: 46px;
+    margin-top: 10px;
 
     > p {
         font-family: 'Raleway';
