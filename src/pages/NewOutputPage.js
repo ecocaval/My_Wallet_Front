@@ -14,8 +14,10 @@ export default function NewOutputPage() {
     function addNewOutput(e) {
         e.preventDefault()
 
-        console.log(newValue)
-        console.log(newDescription)
+        // console.log(newValue)
+        // console.log(newDescription)
+
+        // * put axios request here
     }
 
     return(

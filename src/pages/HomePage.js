@@ -10,13 +10,25 @@ import { CenteredWrapper } from "../styles/CenteredWrapperStyle";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledH1 } from "../styles/StyledH1Style.js";
 import { StyledHeader } from "../styles/StyledHeaderStyle.js";
-import { MyTransactions, TransactionButton, TransactionButtons, TransactionIcon } from "../styles/TransactionsStyle.js";
+import { TransactionsSection, TransactionButton, TransactionButtons, TransactionIcon, Transaction, TransactionDate, TransactionDescription, TransactionValue, MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue } from "../styles/TransactionsStyle.js";
+import styled from "styled-components";
 
 export default function HomePage() {
 
     const navigate = useNavigate()
     const [userName, setUserName] = useState("Fulano") // ! Temporary name in useState
     const [userTransactions, setUserTransactions] = useState([])
+
+    function calculateBalanceValue() {
+        
+        let balance = 0
+
+        userTransactions.forEach(transaction => {
+            balance += Number(transaction.value)
+        })
+        
+        return String(balance)
+    }
 
     return (
         <CenteredWrapper>
@@ -25,20 +37,40 @@ export default function HomePage() {
                     <StyledH1>
                         Olá, {userName}
                     </StyledH1>
-                    <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")}/>
+                    <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
                 </StyledHeader>
-                <MyTransactions>
-                    <p>{userTransactions.length ? "" : "Não há registros de entrada ou saída"}</p>
-                </MyTransactions>
+                <TransactionsSection thereAreTransactions={userTransactions.length}>
+                    {userTransactions.length ? (
+                        <>
+                            <MyTransactions>
+                                {userTransactions.map(transaction => (
+                                    <Transaction>
+                                        <TransactionLeftInfo>
+                                            <TransactionDate>{transaction.date}</TransactionDate>
+                                            <TransactionDescription>{transaction.description}</TransactionDescription>
+                                        </TransactionLeftInfo>
+                                        <div>
+                                            <TransactionValue transactionType={transaction.type}>{transaction.value}</TransactionValue>
+                                        </div>
+                                    </Transaction>
+                                ))}
+                            </MyTransactions>
+                            <BalanceSection>
+                                <BalanceText>SALDO</BalanceText>
+                                <BalanceValue>{calculateBalanceValue()}</BalanceValue>
+                            </BalanceSection>
+                        </>
+                    ) : <p>Não há registros de entrada ou saída</p>}
+                </TransactionsSection>
                 <TransactionButtons>
-                    <TransactionButton onClick={() => navigate("/nova-entrada")}> 
+                    <TransactionButton onClick={() => navigate("/nova-entrada")}>
                         <TransactionIcon>
                             <img src={circleIcon} alt="Circle Icon" />
                             <img src={plusIcon} alt="Plus Icon" />
                         </TransactionIcon>
                         <p>Nova entrada</p>
                     </TransactionButton>
-                    <TransactionButton onClick={() => navigate("/nova-saida")}>     
+                    <TransactionButton onClick={() => navigate("/nova-saida")}>
                         <TransactionIcon>
                             <img src={circleIcon} alt="Circle Icon" />
                             <img src={minusIcon} alt="Minus Icon" />
@@ -50,3 +82,4 @@ export default function HomePage() {
         </CenteredWrapper>
     )
 }
+

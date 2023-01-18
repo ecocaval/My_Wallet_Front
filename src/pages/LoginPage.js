@@ -23,7 +23,7 @@ export default function LoginPage() {
 
         // * put axios request here
 
-        navigate("/home") //! Temporaty - must have validation
+        navigate("/home") //! Temporary - must have validation
     }
 
     return (

@@ -1,17 +1,19 @@
 import styled from "styled-components";
 
-export const MyTransactions = styled.main`
+export const TransactionsSection = styled.section`
     width: 325px;
     height: 450px;
     background: #FFFFFF;
     border-radius: 5px;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    justify-content: ${props => props.thereAreTransactions ? "space-between" : "center"};
     align-items: center;
+    padding: 15px;
 
     > p {
         text-align: center;
-        width: 60%;
+        width: 70%;
         font-family: 'Raleway';
         font-weight: 400;
         font-size: 20px;
@@ -52,11 +54,72 @@ export const TransactionIcon = styled.figure`
     position: relative;
     width: 25px;
     height: 25px;
-    
+
     > img {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
+`
+
+export const MyTransactions = styled.section`
+    width: 100%;
+    height: 90%;
+    overflow-y: scroll; //! Temporary - should put scroll indication after 
+`
+
+export const Transaction = styled.section`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0px;
+`
+
+export const TransactionLeftInfo = styled.div`
+    display: flex;
+`
+
+export const TransactionDate = styled.p`
+    font-family: 'Raleway';
+    font-style: normal;
+    font-size: 16px;
+    color: #C6C6C6;
+`
+
+export const TransactionDescription = styled.p`
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 16px;
+    color: #000000;
+    margin-left: 10px;
+`
+
+export const TransactionValue = styled.p`
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 16px;
+    color: ${props => props.transactionType === "entry" ? "#03AC00" : "#C70000"};
+`
+
+export const BalanceSection = styled.section`
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+`
+
+export const BalanceText = styled.p`
+    font-family: 'Raleway';
+    font-weight: 700;
+    font-size: 17px;
+    color: #000000;
+`
+
+export const BalanceValue = styled.p`
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 17px;
+    color: #03AC00;
 `
