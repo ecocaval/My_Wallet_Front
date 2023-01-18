@@ -1,15 +1,10 @@
 import styled from "styled-components";
 
-export const Wrapper = styled.div`
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
-
 export const StyledMain = styled.main`
     display: flex;
     flex-direction: column;
+    align-items: center;
+    /* border: 2px blue solid; //! Temporary */
 
     > form {
         margin-top: 20px;

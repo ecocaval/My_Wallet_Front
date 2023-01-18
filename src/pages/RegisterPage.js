@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { StyledMain, Wrapper } from "../styles/LoginRegisterPageStyle";
+import { Wrapper } from "../styles/GenericWrapperStyle";
+import { StyledMain } from "../styles/StyledMainStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledLink } from "../styles/StyledLinkStyle";
@@ -12,16 +13,16 @@ export default function RegisterPage() {
     const [userEmail, setUserEmail] = useState("")
     const [userPassword, setUserPassword] = useState("")
     const [userPasswordConf, setUserPasswordConf] = useState("")
-    
+
 
     function sendRegister(e) {
         e.preventDefault()
 
-        console.log(userLogin);        
-        console.log(userEmail);        
-        console.log(userPassword);        
-        console.log(userPasswordConf); 
-        
+        // console.log(userLogin);
+        // console.log(userEmail);
+        // console.log(userPassword);
+        // console.log(userPasswordConf);
+
         // * put axios request here
     }
 

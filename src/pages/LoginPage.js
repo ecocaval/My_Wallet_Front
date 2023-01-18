@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { StyledMain, Wrapper } from "../styles/LoginRegisterPageStyle";
+import { Wrapper } from "../styles/GenericWrapperStyle";
+import { StyledMain } from "../styles/StyledMainStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledLink } from "../styles/StyledLinkStyle";
@@ -14,8 +15,8 @@ export default function LoginPage() {
     function sendLogin(e) {
         e.preventDefault()
 
-        console.log(userLogin);
-        console.log(userPassword);
+        // console.log(userLogin);
+        // console.log(userPassword);
 
         // * put axios request here
     }
