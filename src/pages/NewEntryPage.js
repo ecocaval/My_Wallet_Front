@@ -14,9 +14,6 @@ export default function NewEntryPage() {
     function addNewEntry(e) {
         e.preventDefault()
 
-        // console.log(newValue)
-        // console.log(newDescription)
-
         // * put axios request here
     }
 

@@ -15,15 +15,9 @@ export default function RegisterPage() {
     const [userEmail, setUserEmail] = useState("")
     const [userPassword, setUserPassword] = useState("")
     const [userPasswordConf, setUserPasswordConf] = useState("")
-
-
+    
     function sendRegister(e) {
         e.preventDefault()
-
-        // console.log(userLogin);
-        // console.log(userEmail);
-        // console.log(userPassword);
-        // console.log(userPasswordConf);
 
         // * put axios request here
     }

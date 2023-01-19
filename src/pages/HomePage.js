@@ -10,14 +10,23 @@ import { CenteredWrapper } from "../styles/CenteredWrapperStyle";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledH1 } from "../styles/StyledH1Style.js";
 import { StyledHeader } from "../styles/StyledHeaderStyle.js";
-import { TransactionsSection, TransactionButton, TransactionButtons, TransactionIcon, Transaction, TransactionDate, TransactionDescription, TransactionValue, MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue } from "../styles/TransactionsStyle.js";
-import styled from "styled-components";
+import { TransactionsSection, TransactionButton, TransactionButtons, TransactionIcon, 
+         Transaction, TransactionDate, TransactionDescription, TransactionValue, 
+         MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue } from "../styles/TransactionsStyle.js";
 
 export default function HomePage() {
 
     const navigate = useNavigate()
-    const [userName, setUserName] = useState("Fulano") // ! Temporary name in useState
+    const [userName, setUserName] = useState("Fulano") // * ! Temporary name in useState
     const [userTransactions, setUserTransactions] = useState([])
+
+    // * Transaction example
+    // * {
+    // *     date: "30/11",
+    // *     description: "Almocinho",
+    // *     type: "entry",
+    // *     value: "30.90"
+    // * }
 
     function calculateBalanceValue() {
         

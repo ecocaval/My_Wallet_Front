@@ -18,9 +18,6 @@ export default function LoginPage() {
     function sendLogin(e) {
         e.preventDefault()
 
-        // console.log(userLogin);
-        // console.log(userPassword);
-
         // * put axios request here
 
         navigate("/home") //! Temporary - must have validation
