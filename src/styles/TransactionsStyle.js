@@ -66,15 +66,15 @@ export const TransactionIcon = styled.figure`
 export const MyTransactions = styled.section`
     width: 100%;
     height: 90%;
-    overflow-y: scroll; //! Temporary - should put scroll indication after 
+    overflow-y: auto; 
 
     ::-webkit-scrollbar-track {
-        padding: 2px 0;
         background-color: #7c1474;
+        border-radius: 10px;
     }
 
     ::-webkit-scrollbar {
-        width: 5px;
+        width: 7px;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -104,11 +104,15 @@ export const TransactionDate = styled.p`
 `
 
 export const TransactionDescription = styled.p`
+    width: 120px;
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
     color: #000000;
     margin-left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `
 
 export const TransactionValue = styled.p`

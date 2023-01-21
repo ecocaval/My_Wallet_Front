@@ -10,7 +10,7 @@ import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
 
-export default function LoginPage({ setUserInfo }) {
+export default function LoginPage({ setUserInfo, setUserTransactions }) {
 
     const navigate = useNavigate()
 
@@ -19,6 +19,9 @@ export default function LoginPage({ setUserInfo }) {
 
     async function sendLogin(e) {
         e.preventDefault()
+
+        setUserInfo({})
+        setUserTransactions([])
 
         try {
             const signInResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, {
@@ -30,7 +33,6 @@ export default function LoginPage({ setUserInfo }) {
             const userId = signInResponse.data.userId
 
             if (signInResponse.status === 200) {
-
                 setUserInfo({
                     userId,
                     token
@@ -39,7 +41,7 @@ export default function LoginPage({ setUserInfo }) {
             }
 
         } catch (error) {
-            console.error(error);
+            if(error.name === "AxiosError") alert("Não encontramos uma conta com estes dados!")
         }
     }
 
@@ -53,12 +55,14 @@ export default function LoginPage({ setUserInfo }) {
                         type="email"
                         value={userEmail}
                         onChange={(e) => setUserEmail(e.currentTarget.value)}
+                        autoComplete="email"
                     />
                     <StyledInput
                         placeholder="Senha"
                         type="password"
                         value={userPassword}
                         onChange={(e) => setUserPassword(e.currentTarget.value)}
+                        autoComplete="current-password"
                     />
 
                     <StyledButton

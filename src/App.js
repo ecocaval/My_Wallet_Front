@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import styled from "styled-components"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import GlobalStyle from "./styles/GlobalStyle.js"
 
@@ -25,7 +25,7 @@ export default function App() {
                     <Routes>
                         <Route
                             path="/"
-                            element={<LoginPage setUserInfo={setUserInfo} />}
+                            element={<LoginPage setUserInfo={setUserInfo} setUserTransactions={setUserTransactions} />}
                         />
                         <Route
                             path="/cadastro"
@@ -41,11 +41,17 @@ export default function App() {
                         />
                         <Route
                             path="/nova-entrada"
-                            element={<NewEntryPage userInfo={userInfo} />}
+                            element={<NewEntryPage
+                                userInfo={userInfo}
+                                setUserInfo={setUserInfo}
+                            />}
                         />
                         <Route
                             path="/nova-saida"
-                            element={<NewOutputPage userInfo={userInfo} />}
+                            element={<NewOutputPage 
+                                userInfo={userInfo}
+                                setUserInfo={setUserInfo}
+                            />}
                         />
                     </Routes>
                 </BrowserRouter>

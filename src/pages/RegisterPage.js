@@ -22,6 +22,8 @@ export default function RegisterPage() {
     async function sendRegister(e) {
         e.preventDefault()
 
+        if(userPassword !== userPasswordConf) return alert("The passwords must be the same!")
+
         const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-up`, {
             name: userName,
             email: userEmail,
@@ -43,24 +45,28 @@ export default function RegisterPage() {
                         type="text"
                         value={userName}
                         onChange={(e) => setUserName(e.currentTarget.value)}
+                        autoComplete="name"
                     />
                     <StyledInput
                         placeholder="E-mail"
                         type="email"
                         value={userEmail}
                         onChange={(e) => setUserEmail(e.currentTarget.value)}
+                        autoComplete="email"
                     />
                     <StyledInput
                         placeholder="Senha"
                         type="password"
                         value={userPassword}
                         onChange={(e) => setUserPassword(e.currentTarget.value)}
+                        autoComplete="new-password"
                     />
                     <StyledInput
                         placeholder="Confirme a senha"
                         type="password"
                         value={userPasswordConf}
                         onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
+                        autoComplete="new-password"
                     />
                     <StyledButton>
                         <p>Cadastrar</p>

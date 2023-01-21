@@ -10,25 +10,36 @@ import { StyledHeader } from "../styles/StyledHeaderStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledMain } from "../styles/StyledMainStyle";
 
-export default function NewEntryPage({ userInfo }) {
+export default function NewEntryPage({ userInfo, setUserInfo }) {
 
     const navigate = useNavigate()
 
     const [newValue, setNewValue] = useState("")
     const [newDescription, setNewDescription] = useState("")
 
+    function treatValue(value) {
+        return Number(value.replace(",", "."))
+    }
+
     async function addNewEntry(e) {
         e.preventDefault()
 
+        let userInfoUpdated = { ...userInfo }
+
+        if (!userInfo.userId || !userInfo.token) {
+            userInfoUpdated = JSON.parse(localStorage.getItem('userInfo'))
+            setUserInfo(userInfoUpdated)
+        }
+
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions`, {
-                value: Number(newValue),
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
+                value: treatValue(newValue),
                 description: newDescription,
                 type: "entry",
                 date: dayjs(Date.now()).format("DD/MM/YYYY")
             }, {
                 headers: {
-                    'authorization': 'Bearer ' + userInfo.token
+                    'authorization': 'Bearer ' + userInfoUpdated.token
                 }
             })
 

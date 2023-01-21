@@ -26,38 +26,41 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
 
     async function getUserInfo() {
 
+        if (!userInfo.token || !userInfo.userId) {
+            const userInfoInLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
+            setUserInfo(userInfoInLocalStorage)
+
+            getUserTransactions(userInfoInLocalStorage)
+            return
+        }
+
         const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}`, {
             headers: {
                 'authorization': 'Bearer ' + userInfo.token
             }
         })
 
-        setUserInfo({ ...userInfo, ...response.data })
+        const updatedUserInfo = { ...userInfo, ...response.data }
 
-        getUserTransactions()
+        setUserInfo(updatedUserInfo)
+
+        localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
+
+        getUserTransactions(updatedUserInfo)
     }
 
-    async function getUserTransactions() {
+    async function getUserTransactions(userInfoUpdated) {
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions`, {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
             headers: {
-                'authorization': 'Bearer ' + userInfo.token
+                'authorization': 'Bearer ' + userInfoUpdated.token
             }
         })
 
         setUserTransactions(response.data)
-
-        return
-    }
-
-    function goHome() {
-        setUserInfo({})
-        setUserTransactions([])
-        navigate("/")
     }
 
     function calculateBalanceValue() {
-
         let balance = 0
 
         userTransactions.forEach(transaction => {
@@ -65,7 +68,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
             else balance -= Number(transaction.value)
         })
 
-        if(balance > 0 && !balanceIsPositive) setBalanceIsPositive(true)
+        if (balance > 0 && !balanceIsPositive) setBalanceIsPositive(true)
         else if (balance < 0 && balanceIsPositive) setBalanceIsPositive(false)
 
         return String(balance.toFixed(2))
@@ -80,7 +83,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                     <StyledH1>
                         Olá, {userInfo.name}
                     </StyledH1>
-                    <img src={leaveIcon} alt="Leave Icon" onClick={goHome} />
+                    <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
                 </StyledHeader>
                 <TransactionsSection thereAreTransactions={userTransactions.length}>
                     {userTransactions.length ? (
@@ -89,7 +92,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                                 {userTransactions.map(transaction => (
                                     <Transaction key={uuidv4()}>
                                         <TransactionLeftInfo>
-                                            <TransactionDate>{transaction.date}</TransactionDate>
+                                            <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
                                             <TransactionDescription>{transaction.description}</TransactionDescription>
                                         </TransactionLeftInfo>
                                         <div>
