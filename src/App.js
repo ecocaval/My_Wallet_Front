@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import styled from "styled-components"
 
+import { useState } from "react"
+
 import GlobalStyle from "./styles/GlobalStyle.js"
 
 import LoginPage from "./pages/LoginPage.js"
@@ -9,32 +11,41 @@ import HomePage from "./pages/HomePage.js"
 import NewEntryPage from "./pages/NewEntryPage.js"
 import NewOutputPage from "./pages/NewOutputPage.js"
 
+
 export default function App() {
-    return(
+
+    const [userInfo, setUserInfo] = useState({})
+    const [userTransactions, setUserTransactions] = useState([])
+
+    return (
         <>
             <BackGround>
-                <GlobalStyle/>
+                <GlobalStyle />
                 <BrowserRouter>
                     <Routes>
                         <Route
                             path="/"
-                            element={<LoginPage/>}
+                            element={<LoginPage setUserInfo={setUserInfo} />}
                         />
                         <Route
                             path="/cadastro"
-                            element={<RegisterPage/>}
+                            element={<RegisterPage />}
                         />
                         <Route
                             path="/home"
-                            element={<HomePage/>}
+                            element={<HomePage
+                                userInfo={userInfo}
+                                setUserInfo={setUserInfo}
+                                userTransactions={userTransactions}
+                                setUserTransactions={setUserTransactions} />}
                         />
                         <Route
                             path="/nova-entrada"
-                            element={<NewEntryPage/>}
+                            element={<NewEntryPage userInfo={userInfo} />}
                         />
                         <Route
                             path="/nova-saida"
-                            element={<NewOutputPage/>}
+                            element={<NewOutputPage userInfo={userInfo} />}
                         />
                     </Routes>
                 </BrowserRouter>

@@ -67,6 +67,21 @@ export const MyTransactions = styled.section`
     width: 100%;
     height: 90%;
     overflow-y: scroll; //! Temporary - should put scroll indication after 
+
+    ::-webkit-scrollbar-track {
+        padding: 2px 0;
+        background-color: #7c1474;
+    }
+
+    ::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #cf99d4;
+    }
 `
 
 export const Transaction = styled.section`
@@ -100,6 +115,7 @@ export const TransactionValue = styled.p`
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
+    margin-right: 8px;
     color: ${props => props.transactionType === "entry" ? "#03AC00" : "#C70000"};
 `
 
@@ -121,5 +137,5 @@ export const BalanceValue = styled.p`
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 17px;
-    color: #03AC00;
+    color: ${props => props.balanceIsPositive ? "#03AC00" : "#C70000" };
 `

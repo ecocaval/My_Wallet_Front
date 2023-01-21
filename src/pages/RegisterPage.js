@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Logo from "../components/Logo.js";
 
@@ -11,15 +12,25 @@ import { StyledLink } from "../styles/StyledLinkStyle.js";
 
 export default function RegisterPage() {
 
-    const [userLogin, setUserLogin] = useState("")
+    const navigate = useNavigate()
+
+    const [userName, setUserName] = useState("")
     const [userEmail, setUserEmail] = useState("")
     const [userPassword, setUserPassword] = useState("")
     const [userPasswordConf, setUserPasswordConf] = useState("")
     
-    function sendRegister(e) {
+    async function sendRegister(e) {
         e.preventDefault()
 
-        // * put axios request here
+        const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-up`, {
+            name: userName,
+            email: userEmail,
+            password: userPassword
+        })
+
+        if(registerResponse.status !== 201) return
+
+        navigate("/")      
     }
 
     return (
@@ -30,8 +41,8 @@ export default function RegisterPage() {
                     <StyledInput
                         placeholder="Nome"
                         type="text"
-                        value={userLogin}
-                        onChange={(e) => setUserLogin(e.currentTarget.value)}
+                        value={userName}
+                        onChange={(e) => setUserName(e.currentTarget.value)}
                     />
                     <StyledInput
                         placeholder="E-mail"

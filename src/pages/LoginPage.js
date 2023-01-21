@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import Logo from "../components/Logo.js";
 
@@ -9,18 +10,37 @@ import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
 
-export default function LoginPage() {
+export default function LoginPage({ setUserInfo }) {
 
     const navigate = useNavigate()
-    const [userLogin, setUserLogin] = useState("")
+
+    const [userEmail, setUserEmail] = useState("")
     const [userPassword, setUserPassword] = useState("")
 
-    function sendLogin(e) {
+    async function sendLogin(e) {
         e.preventDefault()
 
-        // * put axios request here
+        try {
+            const signInResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, {
+                email: userEmail,
+                password: userPassword
+            })
 
-        navigate("/home") //! Temporary - must have validation
+            const token = signInResponse.data.token.replace("Bearer ", "")
+            const userId = signInResponse.data.userId
+
+            if (signInResponse.status === 200) {
+
+                setUserInfo({
+                    userId,
+                    token
+                })
+                navigate("/home")
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
     return (
@@ -31,8 +51,8 @@ export default function LoginPage() {
                     <StyledInput
                         placeholder="E-mail"
                         type="email"
-                        value={userLogin}
-                        onChange={(e) => setUserLogin(e.currentTarget.value)}
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.currentTarget.value)}
                     />
                     <StyledInput
                         placeholder="Senha"
