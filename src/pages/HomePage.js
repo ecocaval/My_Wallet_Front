@@ -20,10 +20,10 @@ import { StyledHeader } from "../styles/StyledHeaderStyle.js";
 import {
     TransactionsSection, TransactionButton, TransactionButtons, TransactionIcon,
     Transaction, TransactionDate, TransactionDescription, TransactionValue,
-    MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue, TransactionRightInfo, TrashContainer
+    MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue, TransactionRightInfo, TrashContainer, NoRegistryText
 } from "../styles/TransactionsStyle.js";
 //* Animations
-import { OneSecondsFadeInLeft } from "../animations/fadeInAnimations";
+import { OneSecondsFadeIn, OneSecondsFadeInLeft } from "../animations/fadeInAnimations";
 
 export default function HomePage({ userInfo, setUserInfo, userTransactions, setUserTransactions }) {
 
@@ -32,7 +32,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
     const [newTransactions, setNewTransactions] = useState([])
     const [userInfoWasReceveid, setUserInfoWasReceveid] = useState(false)
     const [balanceIsPositive, setBalanceIsPositive] = useState(true)
-    const [activeIndex, setActiveIndex] = useState(-1);
+    const [activeIndexes, setActiveIndexes] = useState([-1]);
 
     async function getUserInfo() {
 
@@ -59,7 +59,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
         getUserTransactions(updatedUserInfo)
     }
 
-    async function getUserTransactions(userInfoUpdated) {
+    async function getUserTransactions(userInfoUpdated, index = -1) {
 
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
@@ -67,22 +67,23 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                     'authorization': 'Bearer ' + userInfoUpdated.token
                 }
             })
+            setActiveIndexes([...activeIndexes].splice(index, 1))
             setUserTransactions(response.data)
-            setActiveIndex(null)
             setUserInfoWasReceveid(true)
         } catch (error) {
+            setActiveIndexes([...activeIndexes].splice(index, 1))
             setUserInfoWasReceveid(true)
         }
     }
 
-    async function deleteTransaction(transaction) {
+    async function deleteTransaction(transaction, index) {
         try {
             await axios.delete(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions/${transaction._id}`, {
                 headers: {
                     'authorization': 'Bearer ' + userInfo.token
                 }
             })
-            getUserTransactions(userInfo)
+            getUserTransactions(userInfo, index)
         } catch (err) {
             console.error(err);
             alert("Houve um erro ao tentar deletar sua transação!")
@@ -131,23 +132,20 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                                         {userTransactions.map((transaction, index) => {
                                             return (
                                                 (newTransactions[index] === undefined) ?
-                                                    (<OneSecondsFadeInLeft>
-                                                        <Transaction key={uuidv4()}>
+                                                    (<OneSecondsFadeInLeft key={uuidv4()}>
+                                                        <Transaction>
                                                             <TransactionLeftInfo>
                                                                 <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
                                                                 <TransactionDescription>{transaction.description}</TransactionDescription>
                                                             </TransactionLeftInfo>
                                                             <TransactionRightInfo>
-                                                                <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
-                                                                {activeIndex !== index ?
-                                                                    <TrashContainer>
-                                                                        <Trash
-                                                                            onClick={() => {
-                                                                                setActiveIndex(index)
-                                                                                deleteTransaction(transaction)
-                                                                            }}
-                                                                            color="#7E0A8F"
-                                                                        />
+                                                                <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2).replace(".", ",")}</TransactionValue>
+                                                                {!activeIndexes?.includes(index) ?
+                                                                    <TrashContainer onClick={() => {
+                                                                        setActiveIndexes([...activeIndexes, index])
+                                                                        deleteTransaction(transaction, index)
+                                                                    }}>
+                                                                        <Trash color="#7E0A8F" />
                                                                     </TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
                                                             </TransactionRightInfo>
                                                         </Transaction>
@@ -159,26 +157,27 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                                                         </TransactionLeftInfo>
                                                         <TransactionRightInfo>
                                                             <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
-                                                            {activeIndex !== index ? <TrashContainer><Trash
-                                                                onClick={() => {
-                                                                    setActiveIndex(index)
-                                                                    deleteTransaction(transaction)
-                                                                }
-                                                                }
-                                                                color="#7E0A8F"
-                                                            /></TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
+                                                            {!activeIndexes?.includes(index) ?
+                                                                <TrashContainer onClick={() => {
+                                                                    setActiveIndexes([...activeIndexes, index])
+                                                                    deleteTransaction(transaction, index)
+                                                                }}>
+                                                                    <Trash color="#7E0A8F"/>
+                                                                </TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
                                                         </TransactionRightInfo>
                                                     </Transaction>
                                             )
                                         }
-                                        )}
+                                        ).reverse()}
                                     </MyTransactions>
                                     <BalanceSection>
                                         <BalanceText>SALDO</BalanceText>
                                         <BalanceValue balanceIsPositive={balanceIsPositive}>{calculateBalanceValue()}</BalanceValue>
                                     </BalanceSection>
                                 </>
-                            ) : <p>Não há registros de entrada ou saída</p>}
+                            ) :
+                                <NoRegistryText><OneSecondsFadeIn>Não há registros de entrada ou saída</OneSecondsFadeIn></NoRegistryText>
+                            }
                         </TransactionsSection>
                         <TransactionButtons>
                             <TransactionButton onClick={() => navigate("/nova-entrada")}>

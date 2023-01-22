@@ -13,7 +13,7 @@ import { StyledHeader } from "../styles/StyledHeaderStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledMain } from "../styles/StyledMainStyle";
 //* Animations
-import { OneSecondsFadeIn, ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
+import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
 
 export default function NewEntryPage({ userInfo, setUserInfo }) {
 

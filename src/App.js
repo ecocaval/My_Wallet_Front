@@ -62,5 +62,6 @@ export default function App() {
 
 const BackGround = styled.div`
     background-color: #9254BE;
-    height: 100vh;
+    overflow: hidden;
+
 `

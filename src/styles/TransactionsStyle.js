@@ -11,16 +11,16 @@ export const TransactionsSection = styled.section`
     justify-content: ${props => props.thereAreTransactions ? "space-between" : "center"};
     align-items: center;
     padding: 15px;
+`
 
-    > p {
-        text-align: center;
-        width: 70%;
-        font-family: 'Raleway';
-        font-weight: 400;
-        font-size: 20px;
-        line-height: 23px;
-        color: #868686;
-    }
+export const NoRegistryText = styled.p`
+    text-align: center;
+    width: 70%;
+    font-family: 'Raleway';
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 23px;
+    color: #868686;
 `
 
 export const TransactionButtons = styled.section`
@@ -44,7 +44,7 @@ export const TransactionButton = styled.button`
 
     > p {
         text-align: left;
-        width: 50%;
+        width: 40%;
         font-family: 'Raleway';
         font-weight: 700;
         font-size: 17px;
@@ -132,6 +132,7 @@ export const TransactionValue = styled.p`
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
+    margin: auto;
     margin-right: 8px;
     color: ${props => props.transactionType === "entry" ? "#03AC00" : "#C70000"};
 `
@@ -160,6 +161,9 @@ export const BalanceValue = styled.p`
 export const TrashContainer = styled.div`
     width: 20px;
     height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover{
         cursor: pointer;
