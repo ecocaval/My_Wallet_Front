@@ -5,5 +5,4 @@ export const UpperWrapper = styled.div`
     display: flex;
     justify-content: center;
     padding-top: 25px;
-    /* border: 5px red solid; // ! Temporary */
 `

@@ -1,14 +1,12 @@
 import styled, { keyframes } from 'styled-components';
-import { fadeIn} from 'react-animations';
+import { fadeIn } from 'react-animations';
 
 const fadeInAnimation = keyframes`${fadeIn}`;
 
 export default function Logo() {
 
     return (
-        <>
-            <StyledH1>MyWallet</StyledH1>
-        </>
+        <StyledH1>MyWallet</StyledH1>
     )
 }
 

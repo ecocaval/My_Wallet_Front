@@ -1,16 +1,18 @@
+//* Libraries
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { InfinitySpin } from 'react-loader-spinner'
-
+//* Components
 import Logo from "../components/Logo.js";
-
+//* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
-import { ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
+//* Animations
+import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
 export default function LoginPage({ setUserInfo, setUserTransactions }) {
 
@@ -57,23 +59,25 @@ export default function LoginPage({ setUserInfo, setUserTransactions }) {
                 <Logo />
                 <form onSubmit={sendLogin}>
                     <TwoSecondsFadeIn>
-                        <StyledInput
-                            placeholder="E-mail"
-                            type="email"
-                            value={userEmail}
-                            onChange={(e) => setUserEmail(e.currentTarget.value)}
-                            autoComplete="email"
-                        />
+                        <OneSecondsFadeInLeft>
+                            <StyledInput
+                                placeholder="E-mail"
+                                type="email"
+                                value={userEmail}
+                                onChange={(e) => setUserEmail(e.currentTarget.value)}
+                                autoComplete="email"
+                            />
+                        </OneSecondsFadeInLeft>
+                        <OneSecondsFadeInRight>
+                            <StyledInput
+                                placeholder="Senha"
+                                type="password"
+                                value={userPassword}
+                                onChange={(e) => setUserPassword(e.currentTarget.value)}
+                                autoComplete="current-password"
+                            />
+                        </OneSecondsFadeInRight>
                     </TwoSecondsFadeIn>
-                    <ThreeSecondsFadeIn>
-                        <StyledInput
-                            placeholder="Senha"
-                            type="password"
-                            value={userPassword}
-                            onChange={(e) => setUserPassword(e.currentTarget.value)}
-                            autoComplete="current-password"
-                        />
-                    </ThreeSecondsFadeIn>
                     <StyledButton
                         type="submit"
                     >

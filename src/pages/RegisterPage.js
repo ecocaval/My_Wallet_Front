@@ -1,16 +1,18 @@
+//* Libraries
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
-
+//* Components
 import Logo from "../components/Logo.js";
-
+//* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
-import { FiveSecondsFadeIn, FourSecondsFadeIn, ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
+//* Animations
+import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
 export default function RegisterPage() {
 
@@ -26,7 +28,10 @@ export default function RegisterPage() {
         e.preventDefault()
         setRequestWasSent(true)
 
-        if (userPassword !== userPasswordConf) return alert("The passwords must be the same!")
+        if (userPassword !== userPasswordConf) {
+            alert("The passwords must be the same!")
+            return setRequestWasSent(false)
+        }
 
         try {
             const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-up`, {
@@ -38,9 +43,9 @@ export default function RegisterPage() {
             if (registerResponse.status !== 201) return
             navigate("/")
         } catch (err) {
+            if(err.response.status === 422) alert("Preencha todos os campos fornecidos!")
             setRequestWasSent(false)
         }
-
     }
 
     return (
@@ -49,42 +54,44 @@ export default function RegisterPage() {
                 <Logo />
                 <form onSubmit={sendRegister}>
                     <TwoSecondsFadeIn>
-                        <StyledInput
-                            placeholder="Nome"
-                            type="text"
-                            value={userName}
-                            onChange={(e) => setUserName(e.currentTarget.value)}
-                            autoComplete="name"
-                        />
-                    </TwoSecondsFadeIn>
-                    <ThreeSecondsFadeIn>
-                        <StyledInput
-                            placeholder="E-mail"
-                            type="email"
-                            value={userEmail}
-                            onChange={(e) => setUserEmail(e.currentTarget.value)}
-                            autoComplete="email"
-                        />
-                    </ThreeSecondsFadeIn>
-                    <FourSecondsFadeIn>
-                        <StyledInput
-                            placeholder="Senha"
-                            type="password"
-                            value={userPassword}
-                            onChange={(e) => setUserPassword(e.currentTarget.value)}
-                            autoComplete="new-password"
-                        />
+                        <OneSecondsFadeInLeft>
+                            <StyledInput
+                                placeholder="Nome"
+                                type="text"
+                                value={userName}
+                                onChange={(e) => setUserName(e.currentTarget.value)}
+                                autoComplete="name"
+                            />
+                        </OneSecondsFadeInLeft>
+                        <OneSecondsFadeInRight>
+                            <StyledInput
+                                placeholder="E-mail"
+                                type="email"
+                                value={userEmail}
+                                onChange={(e) => setUserEmail(e.currentTarget.value)}
+                                autoComplete="email"
+                            />
+                        </OneSecondsFadeInRight>
+                        <OneSecondsFadeInLeft>
+                            <StyledInput
+                                placeholder="Senha"
+                                type="password"
+                                value={userPassword}
+                                onChange={(e) => setUserPassword(e.currentTarget.value)}
+                                autoComplete="new-password"
+                            />
 
-                    </FourSecondsFadeIn>
-                    <FiveSecondsFadeIn>
-                        <StyledInput
-                            placeholder="Confirme a senha"
-                            type="password"
-                            value={userPasswordConf}
-                            onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
-                            autoComplete="new-password"
-                        />
-                    </FiveSecondsFadeIn>
+                        </OneSecondsFadeInLeft>
+                        <OneSecondsFadeInRight>
+                            <StyledInput
+                                placeholder="Confirme a senha"
+                                type="password"
+                                value={userPasswordConf}
+                                onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
+                                autoComplete="new-password"
+                            />
+                        </OneSecondsFadeInRight>
+                    </TwoSecondsFadeIn>
                     <StyledButton>
                         {requestWasSent ?
                             <InfinitySpin
@@ -99,6 +106,6 @@ export default function RegisterPage() {
                     </Link>
                 </StyledLink>
             </StyledMain>
-        </CenteredWrapper>
+        </CenteredWrapper >
     )
 }

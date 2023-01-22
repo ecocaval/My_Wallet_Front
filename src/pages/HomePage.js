@@ -1,15 +1,18 @@
+//* Libraries
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { v4 as uuidv4 } from "uuid"
-
+import { FcEmptyTrash as Trash } from "react-icons/fc";
+import axios from "axios";
+//* Images
 import leaveIcon from "./../images/leaveIcon.png"
 import circleIcon from "./../images/circleIcon.png"
 import plusIcon from "./../images/plusIcon.png"
 import minusIcon from "./../images/minusIcon.png"
-
+//* Components
 import Loader from "../components/Loader.js";
-
+import DeletingLoader from "../components/DeletingLoader";
+//* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledH1 } from "../styles/StyledH1Style.js";
@@ -17,15 +20,19 @@ import { StyledHeader } from "../styles/StyledHeaderStyle.js";
 import {
     TransactionsSection, TransactionButton, TransactionButtons, TransactionIcon,
     Transaction, TransactionDate, TransactionDescription, TransactionValue,
-    MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue
+    MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue, TransactionRightInfo, TrashContainer
 } from "../styles/TransactionsStyle.js";
+//* Animations
+import { OneSecondsFadeInLeft } from "../animations/fadeInAnimations";
 
 export default function HomePage({ userInfo, setUserInfo, userTransactions, setUserTransactions }) {
 
     const navigate = useNavigate()
 
+    const [newTransactions, setNewTransactions] = useState([])
     const [userInfoWasReceveid, setUserInfoWasReceveid] = useState(false)
     const [balanceIsPositive, setBalanceIsPositive] = useState(true)
+    const [activeIndex, setActiveIndex] = useState(-1);
 
     async function getUserInfo() {
 
@@ -59,11 +66,26 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                 headers: {
                     'authorization': 'Bearer ' + userInfoUpdated.token
                 }
-            })    
+            })
             setUserTransactions(response.data)
+            setActiveIndex(null)
             setUserInfoWasReceveid(true)
         } catch (error) {
             setUserInfoWasReceveid(true)
+        }
+    }
+
+    async function deleteTransaction(transaction) {
+        try {
+            await axios.delete(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions/${transaction._id}`, {
+                headers: {
+                    'authorization': 'Bearer ' + userInfo.token
+                }
+            })
+            getUserTransactions(userInfo)
+        } catch (err) {
+            console.error(err);
+            alert("Houve um erro ao tentar deletar sua transação!")
         }
     }
 
@@ -83,6 +105,14 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
 
     useEffect(() => getUserInfo, [])
 
+    useEffect(function treatAnimation() {
+        userTransactions.forEach((_, index) => {
+            if (newTransactions[index] === undefined) {
+                newTransactions[index] = true
+            }
+        })
+    }, [userTransactions])
+
     return (
         <CenteredWrapper>
             <StyledMain>
@@ -98,17 +128,50 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
                             {userTransactions.length ? (
                                 <>
                                     <MyTransactions>
-                                        {userTransactions.map(transaction => (
-                                            <Transaction key={uuidv4()}>
-                                                <TransactionLeftInfo>
-                                                    <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
-                                                    <TransactionDescription>{transaction.description}</TransactionDescription>
-                                                </TransactionLeftInfo>
-                                                <div>
-                                                    <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
-                                                </div>
-                                            </Transaction>
-                                        ))}
+                                        {userTransactions.map((transaction, index) => {
+                                            return (
+                                                (newTransactions[index] === undefined) ?
+                                                    (<OneSecondsFadeInLeft>
+                                                        <Transaction key={uuidv4()}>
+                                                            <TransactionLeftInfo>
+                                                                <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
+                                                                <TransactionDescription>{transaction.description}</TransactionDescription>
+                                                            </TransactionLeftInfo>
+                                                            <TransactionRightInfo>
+                                                                <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
+                                                                {activeIndex !== index ?
+                                                                    <TrashContainer>
+                                                                        <Trash
+                                                                            onClick={() => {
+                                                                                setActiveIndex(index)
+                                                                                deleteTransaction(transaction)
+                                                                            }}
+                                                                            color="#7E0A8F"
+                                                                        />
+                                                                    </TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
+                                                            </TransactionRightInfo>
+                                                        </Transaction>
+                                                    </OneSecondsFadeInLeft>) :
+                                                    <Transaction key={uuidv4()}>
+                                                        <TransactionLeftInfo>
+                                                            <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
+                                                            <TransactionDescription>{transaction.description}</TransactionDescription>
+                                                        </TransactionLeftInfo>
+                                                        <TransactionRightInfo>
+                                                            <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
+                                                            {activeIndex !== index ? <TrashContainer><Trash
+                                                                onClick={() => {
+                                                                    setActiveIndex(index)
+                                                                    deleteTransaction(transaction)
+                                                                }
+                                                                }
+                                                                color="#7E0A8F"
+                                                            /></TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
+                                                        </TransactionRightInfo>
+                                                    </Transaction>
+                                            )
+                                        }
+                                        )}
                                     </MyTransactions>
                                     <BalanceSection>
                                         <BalanceText>SALDO</BalanceText>

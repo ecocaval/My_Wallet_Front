@@ -5,5 +5,4 @@ export const CenteredWrapper = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    /* border: 5px red solid; // ! Temporary */
 `

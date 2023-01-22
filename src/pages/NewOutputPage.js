@@ -1,18 +1,19 @@
+//* Libraries
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImHome } from "react-icons/im";
+import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
 import dayjs from "dayjs";
-
-import { OneSecondsFadeIn, TwoSecondsFadeIn, ThreeSecondsFadeIn } from "../animations/fadeInAnimations";
-
+//* Styles
 import { UpperWrapper } from "../styles/UpperWrapperStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
 import { StyledH1 } from "../styles/StyledH1Style";
 import { StyledHeader } from "../styles/StyledHeaderStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledMain } from "../styles/StyledMainStyle";
-import { InfinitySpin } from "react-loader-spinner";
+//* Animations
+import { OneSecondsFadeIn, TwoSecondsFadeIn, ThreeSecondsFadeIn } from "../animations/fadeInAnimations";
 
 export default function NewOutputPage({ userInfo, setUserInfo }) {
 
@@ -55,6 +56,7 @@ export default function NewOutputPage({ userInfo, setUserInfo }) {
 
         } catch (err) {
             console.error(err)
+            if(err.response.status === 422) alert("Preencha todos os campos fornecidos!")
             setRequestWasSent(false)
         }
     }
@@ -85,14 +87,14 @@ export default function NewOutputPage({ userInfo, setUserInfo }) {
                             onChange={(e) => setNewValue(e.currentTarget.value)}
                         />
                     </TwoSecondsFadeIn>
-                    <ThreeSecondsFadeIn>
+                    <TwoSecondsFadeIn>
                         <StyledInput
                             placeholder="Descrição"
                             type="text"
                             value={newDescription}
                             onChange={(e) => setNewDescription(e.currentTarget.value)}
                         />
-                    </ThreeSecondsFadeIn>
+                    </TwoSecondsFadeIn>
                     <StyledButton>
                         {requestWasSent ?
                             <InfinitySpin

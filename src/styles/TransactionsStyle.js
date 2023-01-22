@@ -6,7 +6,7 @@ export const TransactionsSection = styled.section`
     background: #FFFFFF;
     border-radius: 5px;
     display: flex;
-    /* box-shadow: 0px 0px 20px #FFFFFF; */
+    box-shadow: 0px 0px 10px #FFFFFF;
     flex-direction: column;
     justify-content: ${props => props.thereAreTransactions ? "space-between" : "center"};
     align-items: center;
@@ -40,7 +40,7 @@ export const TransactionButton = styled.button`
     flex-direction: column;
     justify-content: space-between;
     padding: 8px;
-    transition: 1s;
+    transition: 0.7s;
 
     > p {
         text-align: left;
@@ -54,7 +54,7 @@ export const TransactionButton = styled.button`
     &:hover {
         cursor: pointer;
         width: 200px;
-        background: #7E0A8F;
+        background: #7E0A8F ;
     }
 `
 
@@ -97,11 +97,16 @@ export const Transaction = styled.section`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 15px 0px;
+    margin: 20px 0px;
 `
 
 export const TransactionLeftInfo = styled.div`
     display: flex;
+`
+
+export const TransactionRightInfo = styled.div`
+    display: flex;
+    margin-right: 10px;
 `
 
 export const TransactionDate = styled.p`
@@ -150,4 +155,13 @@ export const BalanceValue = styled.p`
     font-weight: 400;
     font-size: 17px;
     color: ${props => props.balanceIsPositive ? "#03AC00" : "#C70000" };
+`
+
+export const TrashContainer = styled.div`
+    width: 20px;
+    height: 20px;
+
+    &:hover{
+        cursor: pointer;
+    }
 `
