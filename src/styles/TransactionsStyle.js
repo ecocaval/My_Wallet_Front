@@ -102,10 +102,12 @@ export const Transaction = styled.section`
 
 export const TransactionLeftInfo = styled.div`
     display: flex;
+    align-items: center;
 `
 
 export const TransactionRightInfo = styled.div`
     display: flex;
+    align-items: center;
     margin-right: 10px;
 `
 
@@ -117,12 +119,13 @@ export const TransactionDate = styled.p`
 `
 
 export const TransactionDescription = styled.p`
-    width: 120px;
+    max-width: 120px;
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
     color: #000000;
     margin-left: 10px;
+    margin-right: 10px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

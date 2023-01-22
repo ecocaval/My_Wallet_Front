@@ -10,6 +10,9 @@ const fadeInRightAnimation = keyframes`${fadeInRight}`;
 //* FADE IN
 export const OneSecondsFadeIn = styled.div`
     animation: 1s ${fadeInAnimation};
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 export const TwoSecondsFadeIn = styled.div`
     animation: 2s ${fadeInAnimation};

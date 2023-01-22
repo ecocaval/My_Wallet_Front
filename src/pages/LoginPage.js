@@ -18,7 +18,7 @@ import { StyledLink } from "../styles/StyledLinkStyle.js";
 import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
 //* Contexts
-import { UserContext } from "../Contexts/UserContext.js";
+import { UserContext } from "../contexts/UserContext.js";
 
 export default function LoginPage() {
 

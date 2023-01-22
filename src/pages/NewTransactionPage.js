@@ -18,13 +18,15 @@ import { StyledMain } from "../styles/StyledMainStyle";
 import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
 
 //* Contexts
-import { UserContext } from "../Contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
+import { TransactionContext } from "../contexts/TransactionContext";
 
-export default function NewOutputPage() {
+export default function NewTransactionPage() {
 
     const navigate = useNavigate()
 
     const { userInfo, setUserInfo } = useContext(UserContext)
+    const { transactionTypeBeingCreated } = useContext(TransactionContext)
 
     const [requestWasSent, setRequestWasSent] = useState(false)
     const [newValue, setNewValue] = useState("")
@@ -34,7 +36,7 @@ export default function NewOutputPage() {
         return Number(value.replace(",", "."))
     }
 
-    async function addNewOutput(e) {
+    async function addNewTransaction(e) {
         e.preventDefault()
 
         setRequestWasSent(true)
@@ -50,7 +52,7 @@ export default function NewOutputPage() {
             const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
                 value: treatValue(newValue),
                 description: newDescription,
-                type: "output",
+                type: transactionTypeBeingCreated,
                 date: dayjs(Date.now()).format("DD/MM/YYYY")
             }, {
                 headers: {
@@ -74,7 +76,7 @@ export default function NewOutputPage() {
                 <StyledHeader>
                     <StyledH1>
                         <OneSecondsFadeIn>
-                            Nova saída
+                            Nova {transactionTypeBeingCreated === "entry" ? "entrada" : "saida"}
                         </OneSecondsFadeIn>
                     </StyledH1>
                     <OneSecondsFadeIn>
@@ -85,7 +87,7 @@ export default function NewOutputPage() {
                         />
                     </OneSecondsFadeIn>
                 </StyledHeader>
-                <form onSubmit={addNewOutput}>
+                <form onSubmit={addNewTransaction}>
                     <TwoSecondsFadeIn>
                         <StyledInput
                             placeholder="Valor"
@@ -102,12 +104,12 @@ export default function NewOutputPage() {
                             onChange={(e) => setNewDescription(e.currentTarget.value)}
                         />
                     </TwoSecondsFadeIn>
-                    <StyledButton>
+                    <StyledButton type="submit">
                         {requestWasSent ?
                             <InfinitySpin
                                 width='200'
                                 color="#FFFFFF"
-                            /> : <p>Salvar saída</p>}
+                            /> : <p>Salvar {transactionTypeBeingCreated === "entry" ? "entrada" : "saida"}</p>}
                     </StyledButton>
                 </form>
             </StyledMain>

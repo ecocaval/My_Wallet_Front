@@ -18,12 +18,14 @@ import { StyledMain } from "../styles/StyledMainStyle";
 import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
 
 //* Contexts
-import { UserContext } from "../Contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
+import { TransactionContext } from "../contexts/TransactionContext";
 
-export default function NewEntryPage() {
+export default function EditTransactionPage() {
 
     const navigate = useNavigate()
 
+    const { transactionBeingUpdated, setTransactionBeingUpdated } = useContext(TransactionContext)
     const { userInfo, setUserInfo } = useContext(UserContext)
 
     const [requestWasSent, setRequestWasSent] = useState(false)
@@ -34,7 +36,7 @@ export default function NewEntryPage() {
         return Number(value.replace(",", "."))
     }
 
-    async function addNewEntry(e) {
+    async function updateEntry(e) {
         e.preventDefault()
 
         setRequestWasSent(true)
@@ -47,11 +49,30 @@ export default function NewEntryPage() {
         }
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
+
+            const getResponse = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
+                headers: {
+                    'authorization': 'Bearer ' + userInfoUpdated.token
+                }
+            })
+
+            const currentTransaction = getResponse.data.filter(transaction => transaction._id === transactionBeingUpdated._id)[0]
+
+            const updateDescription = {
+                date: dayjs(Date.now()).format("DD/MM/YYYY"),
+                hour: dayjs(Date.now()).format("HH:mm:ss"),
+                fromValue: currentTransaction.value,
+                toValue: treatValue(newValue),
+                fromDesc: currentTransaction.description,
+                toDesc: newDescription,
+            }
+
+            const putResponse = await axios.put(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions/${transactionBeingUpdated._id}`, {
                 value: treatValue(newValue),
                 description: newDescription,
-                type: "entry",
-                date: dayjs(Date.now()).format("DD/MM/YYYY")
+                updatedDate: currentTransaction.updatedDate?.length > 0 ?
+                    [...currentTransaction.updatedDate, updateDescription] :
+                    [updateDescription]
             }, {
                 headers: {
                     'authorization': 'Bearer ' + userInfoUpdated.token
@@ -59,11 +80,13 @@ export default function NewEntryPage() {
             })
 
             setRequestWasSent(false)
-            if (response.status === 201) navigate("/home")
+            setTransactionBeingUpdated(null)
+
+            if (putResponse.status === 200 || putResponse.status === 204) navigate("/home")
 
         } catch (err) {
             console.error(err)
-            if(err.response.status === 422) alert("Preencha todos os campos fornecidos!")
+            if (err.response.status === 422) alert("Preencha todos os campos fornecidos!")
             setRequestWasSent(false)
         }
     }
@@ -74,7 +97,7 @@ export default function NewEntryPage() {
                 <StyledHeader>
                     <StyledH1>
                         <OneSecondsFadeIn>
-                            Nova entrada
+                            Editar {transactionBeingUpdated.type === "entry" ? "entrada" : "saida" }
                         </OneSecondsFadeIn>
                     </StyledH1>
                     <OneSecondsFadeIn>
@@ -85,7 +108,7 @@ export default function NewEntryPage() {
                         />
                     </OneSecondsFadeIn>
                 </StyledHeader>
-                <form onSubmit={addNewEntry}>
+                <form onSubmit={updateEntry}>
                     <TwoSecondsFadeIn>
                         <StyledInput
                             placeholder="Valor"
@@ -107,7 +130,7 @@ export default function NewEntryPage() {
                             <InfinitySpin
                                 width='200'
                                 color="#FFFFFF"
-                            /> : <p>Salvar entrada</p>}
+                            /> : <p>Atualizar {transactionBeingUpdated.type === "entry" ? "entrada" : "saida" }</p>}
                     </StyledButton>
                 </form>
             </StyledMain>

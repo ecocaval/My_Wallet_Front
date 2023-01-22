@@ -3,6 +3,7 @@ import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid"
 import { FcEmptyTrash as Trash } from "react-icons/fc";
+import { FiEdit } from "react-icons/fi";
 import axios from "axios";
 
 //* Images
@@ -30,15 +31,17 @@ import {
 import { OneSecondsFadeIn, OneSecondsFadeInLeft } from "../animations/fadeInAnimations";
 
 //* Contexts
-import { UserContext } from "../Contexts/UserContext";
+import { UserContext } from "../contexts/UserContext";
+import { TransactionContext } from "../contexts/TransactionContext";
 
 export default function HomePage() {
 
     const navigate = useNavigate()
 
     const { userInfo, setUserInfo, userTransactions, setUserTransactions } = useContext(UserContext)
+    const { setTransactionBeingUpdated, setTransactionTypeBeingCreated } = useContext(TransactionContext)
 
-    const [newTransactions, setNewTransactions] = useState([])
+    const [isTransactionNew, setIsTransactionNew] = useState([])
     const [userInfoWasReceveid, setUserInfoWasReceveid] = useState(false)
     const [balanceIsPositive, setBalanceIsPositive] = useState(true)
     const [activeIndexes, setActiveIndexes] = useState([-1]);
@@ -117,8 +120,8 @@ export default function HomePage() {
 
     useEffect(function treatAnimation() {
         userTransactions.forEach((_, index) => {
-            if (newTransactions[index] === undefined) {
-                newTransactions[index] = true
+            if (isTransactionNew[index] === undefined) {
+                isTransactionNew[index] = true
             }
         })
     }, [userTransactions])
@@ -140,15 +143,26 @@ export default function HomePage() {
                                     <MyTransactions>
                                         {userTransactions.map((transaction, index) => {
                                             return (
-                                                (newTransactions[index] === undefined) ?
+                                                (isTransactionNew[index] === undefined) ?
                                                     (<OneSecondsFadeInLeft key={uuidv4()}>
                                                         <Transaction>
+
                                                             <TransactionLeftInfo>
                                                                 <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
                                                                 <TransactionDescription>{transaction.description}</TransactionDescription>
+                                                                <TrashContainer onClick={() => {
+                                                                    setTransactionBeingUpdated(transaction)
+                                                                    if (transaction.type === "entry") navigate(`/editar-entrada/${transaction._id}`)
+                                                                    else navigate(`/editar-saida/${transaction._id}`)
+                                                                }}>
+                                                                    <FiEdit color="9254BE" />
+                                                                </TrashContainer>
                                                             </TransactionLeftInfo>
+
                                                             <TransactionRightInfo>
-                                                                <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2).replace(".", ",")}</TransactionValue>
+                                                                <TransactionValue transactionType={transaction.type}>
+                                                                    {transaction.type === "output" && "-"}{transaction.value.toFixed(2).replace(".", ",")}
+                                                                </TransactionValue>
                                                                 {!activeIndexes?.includes(index) ?
                                                                     <TrashContainer onClick={() => {
                                                                         setActiveIndexes([...activeIndexes, index])
@@ -157,23 +171,36 @@ export default function HomePage() {
                                                                         <Trash color="#7E0A8F" />
                                                                     </TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
                                                             </TransactionRightInfo>
+
                                                         </Transaction>
                                                     </OneSecondsFadeInLeft>) :
                                                     <Transaction key={uuidv4()}>
                                                         <TransactionLeftInfo>
                                                             <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
                                                             <TransactionDescription>{transaction.description}</TransactionDescription>
+
+                                                            <TrashContainer onClick={() => {
+                                                                setTransactionBeingUpdated(transaction)
+                                                                if (transaction.type === "entry") navigate(`/editar-entrada/${transaction._id}`)
+                                                                else navigate(`/editar-saida/${transaction._id}`)
+                                                            }}>
+                                                                <FiEdit color="9254BE" />
+                                                            </TrashContainer>
                                                         </TransactionLeftInfo>
+
                                                         <TransactionRightInfo>
-                                                            <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
+                                                            <TransactionValue transactionType={transaction.type}>
+                                                                {transaction.type === "output" && "-"}{transaction.value.toFixed(2)}
+                                                            </TransactionValue>
                                                             {!activeIndexes?.includes(index) ?
                                                                 <TrashContainer onClick={() => {
                                                                     setActiveIndexes([...activeIndexes, index])
                                                                     deleteTransaction(transaction, index)
                                                                 }}>
-                                                                    <Trash color="#7E0A8F"/>
+                                                                    <Trash color="#7E0A8F" />
                                                                 </TrashContainer> : <TrashContainer><DeletingLoader /></TrashContainer>}
                                                         </TransactionRightInfo>
+
                                                     </Transaction>
                                             )
                                         }
@@ -185,18 +212,24 @@ export default function HomePage() {
                                     </BalanceSection>
                                 </>
                             ) :
-                                <NoRegistryText><OneSecondsFadeIn>Não há registros de entrada ou saída</OneSecondsFadeIn></NoRegistryText>
+                                <OneSecondsFadeIn><NoRegistryText>Não há registros de entrada ou saída</NoRegistryText></OneSecondsFadeIn>
                             }
                         </TransactionsSection>
                         <TransactionButtons>
-                            <TransactionButton onClick={() => navigate("/nova-entrada")}>
+                            <TransactionButton onClick={() => {
+                                setTransactionTypeBeingCreated("entry")
+                                navigate("/nova-entrada")
+                            }}>
                                 <TransactionIcon>
                                     <img src={circleIcon} alt="Circle Icon" />
                                     <img src={plusIcon} alt="Plus Icon" />
                                 </TransactionIcon>
                                 <p>Nova entrada</p>
                             </TransactionButton>
-                            <TransactionButton onClick={() => navigate("/nova-saida")}>
+                            <TransactionButton onClick={() => {
+                                setTransactionTypeBeingCreated("output")
+                                navigate("/nova-saida")
+                            }}>
                                 <TransactionIcon>
                                     <img src={circleIcon} alt="Circle Icon" />
                                     <img src={minusIcon} alt="Minus Icon" />
