@@ -54,14 +54,17 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
 
     async function getUserTransactions(userInfoUpdated) {
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
-            headers: {
-                'authorization': 'Bearer ' + userInfoUpdated.token
-            }
-        })
-
-        setUserTransactions(response.data)
-        setUserInfoWasReceveid(true)
+        try {
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
+                headers: {
+                    'authorization': 'Bearer ' + userInfoUpdated.token
+                }
+            })    
+            setUserTransactions(response.data)
+            setUserInfoWasReceveid(true)
+        } catch (error) {
+            setUserInfoWasReceveid(true)
+        }
     }
 
     function calculateBalanceValue() {

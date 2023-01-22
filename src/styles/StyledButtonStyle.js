@@ -6,10 +6,12 @@ export const StyledButton = styled.button`
     border: none;
     width: 326px;
     height: 46px;
+    margin: auto;
     margin-top: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: 0.5s;
 
     > p {
         font-family: 'Raleway';
@@ -20,5 +22,6 @@ export const StyledButton = styled.button`
 
     &:hover {
         cursor: pointer;
+        background: #7E0A8F;
     }
 `

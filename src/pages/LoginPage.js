@@ -10,7 +10,7 @@ import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
-import { FourSecondsFadeIn, ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
+import { ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
 export default function LoginPage({ setUserInfo, setUserTransactions }) {
 
@@ -28,7 +28,6 @@ export default function LoginPage({ setUserInfo, setUserTransactions }) {
         setUserTransactions([])
 
         try {
-
             const signInResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, {
                 email: userEmail,
                 password: userPassword
@@ -37,19 +36,17 @@ export default function LoginPage({ setUserInfo, setUserTransactions }) {
             const token = signInResponse.data.token.replace("Bearer ", "")
             const userId = signInResponse.data.userId
 
-
             if (signInResponse.status === 200) {
                 setUserInfo({
                     userId,
                     token
                 })
             }
-
-
             navigate("/home")
 
         } catch (error) {
             if (error.name === "AxiosError") alert("Não encontramos uma conta com estes dados!")
+            setRequestWasSent(false)
         }
     }
 

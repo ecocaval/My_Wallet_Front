@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ImHome } from "react-icons/im";
+import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
 import dayjs from "dayjs";
 
@@ -16,6 +18,7 @@ export default function NewEntryPage({ userInfo, setUserInfo }) {
 
     const navigate = useNavigate()
 
+    const [requestWasSent, setRequestWasSent] = useState(false)
     const [newValue, setNewValue] = useState("")
     const [newDescription, setNewDescription] = useState("")
 
@@ -25,6 +28,8 @@ export default function NewEntryPage({ userInfo, setUserInfo }) {
 
     async function addNewEntry(e) {
         e.preventDefault()
+
+        setRequestWasSent(true)
 
         let userInfoUpdated = { ...userInfo }
 
@@ -45,10 +50,12 @@ export default function NewEntryPage({ userInfo, setUserInfo }) {
                 }
             })
 
+            setRequestWasSent(false)
             if (response.status === 201) navigate("/home")
 
         } catch (err) {
             console.error(err)
+            setRequestWasSent(false)
         }
     }
 
@@ -61,6 +68,13 @@ export default function NewEntryPage({ userInfo, setUserInfo }) {
                             Nova entrada
                         </OneSecondsFadeIn>
                     </StyledH1>
+                    <OneSecondsFadeIn>
+                        <ImHome
+                            color="#FFFFFF"
+                            size="25px"
+                            onClick={() => navigate("/home")}
+                        />
+                    </OneSecondsFadeIn>
                 </StyledHeader>
                 <form onSubmit={addNewEntry}>
                     <TwoSecondsFadeIn>
@@ -80,7 +94,11 @@ export default function NewEntryPage({ userInfo, setUserInfo }) {
                         />
                     </ThreeSecondsFadeIn>
                     <StyledButton type="submit">
-                        <p>Salvar entrada</p>
+                        {requestWasSent ?
+                            <InfinitySpin
+                                width='200'
+                                color="#FFFFFF"
+                            /> : <p>Salvar entrada</p>}
                     </StyledButton>
                 </form>
             </StyledMain>

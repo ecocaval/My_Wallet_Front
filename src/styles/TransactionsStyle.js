@@ -6,6 +6,7 @@ export const TransactionsSection = styled.section`
     background: #FFFFFF;
     border-radius: 5px;
     display: flex;
+    /* box-shadow: 0px 0px 20px #FFFFFF; */
     flex-direction: column;
     justify-content: ${props => props.thereAreTransactions ? "space-between" : "center"};
     align-items: center;
@@ -30,7 +31,7 @@ export const TransactionButtons = styled.section`
 `
 
 export const TransactionButton = styled.button`
-    width: 150px;
+    width: 120px;
     height: 120px;
     background: #A328D6;
     border-radius: 5px;
@@ -39,6 +40,7 @@ export const TransactionButton = styled.button`
     flex-direction: column;
     justify-content: space-between;
     padding: 8px;
+    transition: 1s;
 
     > p {
         text-align: left;
@@ -51,6 +53,8 @@ export const TransactionButton = styled.button`
 
     &:hover {
         cursor: pointer;
+        width: 200px;
+        background: #7E0A8F;
     }
 `
 
