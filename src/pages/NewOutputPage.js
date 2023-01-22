@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import dayjs from "dayjs";
 
+import { OneSecondsFadeIn, ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
+
 import { UpperWrapper } from "../styles/UpperWrapperStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
 import { StyledH1 } from "../styles/StyledH1Style";
@@ -55,22 +57,28 @@ export default function NewOutputPage({ userInfo, setUserInfo }) {
             <StyledMain>
                 <StyledHeader>
                     <StyledH1>
-                        Nova saída
+                        <OneSecondsFadeIn>
+                            Nova saída
+                        </OneSecondsFadeIn>
                     </StyledH1>
                 </StyledHeader>
                 <form onSubmit={addNewOutput}>
-                    <StyledInput
-                        placeholder="Valor"
-                        type="text"
-                        value={newValue}
-                        onChange={(e) => setNewValue(e.currentTarget.value)}
-                    />
-                    <StyledInput
-                        placeholder="Descrição"
-                        type="text"
-                        value={newDescription}
-                        onChange={(e) => setNewDescription(e.currentTarget.value)}
-                    />
+                    <TwoSecondsFadeIn>
+                        <StyledInput
+                            placeholder="Valor"
+                            type="text"
+                            value={newValue}
+                            onChange={(e) => setNewValue(e.currentTarget.value)}
+                        />
+                    </TwoSecondsFadeIn>
+                    <ThreeSecondsFadeIn>
+                        <StyledInput
+                            placeholder="Descrição"
+                            type="text"
+                            value={newDescription}
+                            onChange={(e) => setNewDescription(e.currentTarget.value)}
+                        />
+                    </ThreeSecondsFadeIn>
                     <StyledButton>
                         <p>Salvar saída</p>
                     </StyledButton>

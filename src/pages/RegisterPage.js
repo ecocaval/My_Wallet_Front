@@ -9,6 +9,7 @@ import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
+import { FiveSecondsFadeIn, FourSecondsFadeIn, ThreeSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
 export default function RegisterPage() {
 
@@ -40,34 +41,43 @@ export default function RegisterPage() {
             <StyledMain>
                 <Logo />
                 <form onSubmit={sendRegister}>
-                    <StyledInput
-                        placeholder="Nome"
-                        type="text"
-                        value={userName}
-                        onChange={(e) => setUserName(e.currentTarget.value)}
-                        autoComplete="name"
-                    />
-                    <StyledInput
-                        placeholder="E-mail"
-                        type="email"
-                        value={userEmail}
-                        onChange={(e) => setUserEmail(e.currentTarget.value)}
-                        autoComplete="email"
-                    />
-                    <StyledInput
-                        placeholder="Senha"
-                        type="password"
-                        value={userPassword}
-                        onChange={(e) => setUserPassword(e.currentTarget.value)}
-                        autoComplete="new-password"
-                    />
-                    <StyledInput
-                        placeholder="Confirme a senha"
-                        type="password"
-                        value={userPasswordConf}
-                        onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
-                        autoComplete="new-password"
-                    />
+                    <TwoSecondsFadeIn>
+                        <StyledInput
+                            placeholder="Nome"
+                            type="text"
+                            value={userName}
+                            onChange={(e) => setUserName(e.currentTarget.value)}
+                            autoComplete="name"
+                        />
+                    </TwoSecondsFadeIn>
+                    <ThreeSecondsFadeIn>
+                        <StyledInput
+                            placeholder="E-mail"
+                            type="email"
+                            value={userEmail}
+                            onChange={(e) => setUserEmail(e.currentTarget.value)}
+                            autoComplete="email"
+                        />                        
+                    </ThreeSecondsFadeIn>
+                    <FourSecondsFadeIn>
+                        <StyledInput
+                            placeholder="Senha"
+                            type="password"
+                            value={userPassword}
+                            onChange={(e) => setUserPassword(e.currentTarget.value)}
+                            autoComplete="new-password"
+                        />
+
+                    </FourSecondsFadeIn>
+                    <FiveSecondsFadeIn>
+                        <StyledInput
+                            placeholder="Confirme a senha"
+                            type="password"
+                            value={userPasswordConf}
+                            onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
+                            autoComplete="new-password"
+                        />
+                    </FiveSecondsFadeIn>
                     <StyledButton>
                         <p>Cadastrar</p>
                     </StyledButton>

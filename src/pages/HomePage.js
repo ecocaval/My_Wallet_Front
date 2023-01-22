@@ -8,6 +8,8 @@ import circleIcon from "./../images/circleIcon.png"
 import plusIcon from "./../images/plusIcon.png"
 import minusIcon from "./../images/minusIcon.png"
 
+import Loader from "../components/Loader.js";
+
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledH1 } from "../styles/StyledH1Style.js";
@@ -22,6 +24,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
 
     const navigate = useNavigate()
 
+    const [userInfoWasReceveid, setUserInfoWasReceveid] = useState(false)
     const [balanceIsPositive, setBalanceIsPositive] = useState(true)
 
     async function getUserInfo() {
@@ -58,6 +61,7 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
         })
 
         setUserTransactions(response.data)
+        setUserInfoWasReceveid(true)
     }
 
     function calculateBalanceValue() {
@@ -79,51 +83,54 @@ export default function HomePage({ userInfo, setUserInfo, userTransactions, setU
     return (
         <CenteredWrapper>
             <StyledMain>
-                <StyledHeader>
-                    <StyledH1>
-                        Olá, {userInfo.name}
-                    </StyledH1>
-                    <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
-                </StyledHeader>
-                <TransactionsSection thereAreTransactions={userTransactions.length}>
-                    {userTransactions.length ? (
-                        <>
-                            <MyTransactions>
-                                {userTransactions.map(transaction => (
-                                    <Transaction key={uuidv4()}>
-                                        <TransactionLeftInfo>
-                                            <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
-                                            <TransactionDescription>{transaction.description}</TransactionDescription>
-                                        </TransactionLeftInfo>
-                                        <div>
-                                            <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
-                                        </div>
-                                    </Transaction>
-                                ))}
-                            </MyTransactions>
-                            <BalanceSection>
-                                <BalanceText>SALDO</BalanceText>
-                                <BalanceValue balanceIsPositive={balanceIsPositive}>{calculateBalanceValue()}</BalanceValue>
-                            </BalanceSection>
-                        </>
-                    ) : <p>Não há registros de entrada ou saída</p>}
-                </TransactionsSection>
-                <TransactionButtons>
-                    <TransactionButton onClick={() => navigate("/nova-entrada")}>
-                        <TransactionIcon>
-                            <img src={circleIcon} alt="Circle Icon" />
-                            <img src={plusIcon} alt="Plus Icon" />
-                        </TransactionIcon>
-                        <p>Nova entrada</p>
-                    </TransactionButton>
-                    <TransactionButton onClick={() => navigate("/nova-saida")}>
-                        <TransactionIcon>
-                            <img src={circleIcon} alt="Circle Icon" />
-                            <img src={minusIcon} alt="Minus Icon" />
-                        </TransactionIcon>
-                        <p>Nova saída</p>
-                    </TransactionButton>
-                </TransactionButtons>
+                {userInfoWasReceveid ? (
+                    <>
+                        <StyledHeader>
+                            <StyledH1>
+                                Olá, {userInfo.name}
+                            </StyledH1>
+                            <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
+                        </StyledHeader>
+                        <TransactionsSection thereAreTransactions={userTransactions.length}>
+                            {userTransactions.length ? (
+                                <>
+                                    <MyTransactions>
+                                        {userTransactions.map(transaction => (
+                                            <Transaction key={uuidv4()}>
+                                                <TransactionLeftInfo>
+                                                    <TransactionDate>{transaction.date.slice(0, 5)}</TransactionDate>
+                                                    <TransactionDescription>{transaction.description}</TransactionDescription>
+                                                </TransactionLeftInfo>
+                                                <div>
+                                                    <TransactionValue transactionType={transaction.type}>{transaction.value.toFixed(2)}</TransactionValue>
+                                                </div>
+                                            </Transaction>
+                                        ))}
+                                    </MyTransactions>
+                                    <BalanceSection>
+                                        <BalanceText>SALDO</BalanceText>
+                                        <BalanceValue balanceIsPositive={balanceIsPositive}>{calculateBalanceValue()}</BalanceValue>
+                                    </BalanceSection>
+                                </>
+                            ) : <p>Não há registros de entrada ou saída</p>}
+                        </TransactionsSection>
+                        <TransactionButtons>
+                            <TransactionButton onClick={() => navigate("/nova-entrada")}>
+                                <TransactionIcon>
+                                    <img src={circleIcon} alt="Circle Icon" />
+                                    <img src={plusIcon} alt="Plus Icon" />
+                                </TransactionIcon>
+                                <p>Nova entrada</p>
+                            </TransactionButton>
+                            <TransactionButton onClick={() => navigate("/nova-saida")}>
+                                <TransactionIcon>
+                                    <img src={circleIcon} alt="Circle Icon" />
+                                    <img src={minusIcon} alt="Minus Icon" />
+                                </TransactionIcon>
+                                <p>Nova saída</p>
+                            </TransactionButton>
+                        </TransactionButtons>
+                    </>) : <Loader />}
             </StyledMain>
         </CenteredWrapper>
     )

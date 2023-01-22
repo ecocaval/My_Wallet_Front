@@ -6,10 +6,13 @@ export const StyledHeader = styled.header`
     align-items: center;
     justify-content: space-between;
     margin-bottom: 30px;
-    /* border: 1px red solid; //! Temporary */
 
     > img {
         width: 23px;
         height: 24px;
+     
+        &:hover {
+        cursor: pointer;
+    }
     }
 `

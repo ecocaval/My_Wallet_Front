@@ -48,6 +48,10 @@ export const TransactionButton = styled.button`
         font-size: 17px;
         color: #FFFFFF;
     }
+
+    &:hover {
+        cursor: pointer;
+    }
 `
 
 export const TransactionIcon = styled.figure`

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import styled from "styled-components"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import GlobalStyle from "./styles/GlobalStyle.js"
 
