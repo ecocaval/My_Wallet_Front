@@ -3,14 +3,17 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
+
 //* Components
 import Logo from "../components/Logo.js";
+
 //* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
+
 //* Animations
 import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 

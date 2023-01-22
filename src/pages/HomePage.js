@@ -1,17 +1,20 @@
 //* Libraries
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid"
 import { FcEmptyTrash as Trash } from "react-icons/fc";
 import axios from "axios";
+
 //* Images
 import leaveIcon from "./../images/leaveIcon.png"
 import circleIcon from "./../images/circleIcon.png"
 import plusIcon from "./../images/plusIcon.png"
 import minusIcon from "./../images/minusIcon.png"
+
 //* Components
 import Loader from "../components/Loader.js";
 import DeletingLoader from "../components/DeletingLoader";
+
 //* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle";
 import { StyledMain } from "../styles/StyledMainStyle.js";
@@ -22,12 +25,18 @@ import {
     Transaction, TransactionDate, TransactionDescription, TransactionValue,
     MyTransactions, TransactionLeftInfo, BalanceSection, BalanceText, BalanceValue, TransactionRightInfo, TrashContainer, NoRegistryText
 } from "../styles/TransactionsStyle.js";
+
 //* Animations
 import { OneSecondsFadeIn, OneSecondsFadeInLeft } from "../animations/fadeInAnimations";
 
-export default function HomePage({ userInfo, setUserInfo, userTransactions, setUserTransactions }) {
+//* Contexts
+import { UserContext } from "../Contexts/UserContext";
+
+export default function HomePage() {
 
     const navigate = useNavigate()
+
+    const { userInfo, setUserInfo, userTransactions, setUserTransactions } = useContext(UserContext)
 
     const [newTransactions, setNewTransactions] = useState([])
     const [userInfoWasReceveid, setUserInfoWasReceveid] = useState(false)

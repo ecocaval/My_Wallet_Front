@@ -1,10 +1,11 @@
 //* Libraries
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImHome } from "react-icons/im";
 import { InfinitySpin } from "react-loader-spinner";
 import axios from "axios";
 import dayjs from "dayjs";
+
 //* Styles
 import { UpperWrapper } from "../styles/UpperWrapperStyle";
 import { StyledButton } from "../styles/StyledButtonStyle";
@@ -12,12 +13,18 @@ import { StyledH1 } from "../styles/StyledH1Style";
 import { StyledHeader } from "../styles/StyledHeaderStyle";
 import { StyledInput } from "../styles/StyledInputStyle";
 import { StyledMain } from "../styles/StyledMainStyle";
+
 //* Animations
 import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
 
-export default function NewEntryPage({ userInfo, setUserInfo }) {
+//* Contexts
+import { UserContext } from "../Contexts/UserContext";
+
+export default function NewEntryPage() {
 
     const navigate = useNavigate()
+
+    const { userInfo, setUserInfo } = useContext(UserContext)
 
     const [requestWasSent, setRequestWasSent] = useState(false)
     const [newValue, setNewValue] = useState("")

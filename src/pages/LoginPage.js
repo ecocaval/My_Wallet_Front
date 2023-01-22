@@ -1,22 +1,30 @@
 //* Libraries
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { InfinitySpin } from 'react-loader-spinner'
+
 //* Components
 import Logo from "../components/Logo.js";
+
 //* Styles
 import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
 import { StyledMain } from "../styles/StyledMainStyle.js";
 import { StyledButton } from "../styles/StyledButtonStyle.js";
 import { StyledInput } from "../styles/StyledInputStyle.js";
 import { StyledLink } from "../styles/StyledLinkStyle.js";
+
 //* Animations
 import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
 
-export default function LoginPage({ setUserInfo, setUserTransactions }) {
+//* Contexts
+import { UserContext } from "../Contexts/UserContext.js";
+
+export default function LoginPage() {
 
     const navigate = useNavigate()
+
+    const { setUserInfo, setUserTransactions } = useContext(UserContext)
 
     const [requestWasSent, setRequestWasSent] = useState(false)
     const [userEmail, setUserEmail] = useState("")
@@ -51,7 +59,6 @@ export default function LoginPage({ setUserInfo, setUserTransactions }) {
             setRequestWasSent(false)
         }
     }
-
 
     return (
         <CenteredWrapper>
