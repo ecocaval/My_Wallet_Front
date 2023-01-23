@@ -1,7 +1,7 @@
 # <p align = "center">MyWallet (React JS)</p>
 
 ## ✏️ Description
-<p align="justify" >Control your transations using this simple and animated wallet application!</p>
+<p align="justify" >Control your transactions using this simple and animated wallet application!</p>
 
 ## :white_circle: Technologies
 
