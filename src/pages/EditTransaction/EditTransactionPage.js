@@ -1,74 +1,59 @@
 //* Libraries
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImHome } from "react-icons/im";
 import { InfinitySpin } from "react-loader-spinner";
-import axios from "axios";
-import dayjs from "dayjs";
 
 //* Styles
-import { UpperWrapper } from "../styles/UpperWrapperStyle";
-import { StyledButton } from "../styles/StyledButtonStyle";
-import { StyledH1 } from "../styles/StyledH1Style";
-import { StyledHeader } from "../styles/StyledHeaderStyle";
-import { StyledInput } from "../styles/StyledInputStyle";
-import { StyledMain } from "../styles/StyledMainStyle";
+import { UpperWrapper } from "../../styles/UpperWrapperStyle";
+import { StyledButton } from "../../styles/StyledButtonStyle";
+import { StyledH1 } from "../../styles/StyledH1Style";
+import { StyledHeader } from "../../styles/StyledHeaderStyle";
+import { StyledInput } from "../../styles/StyledInputStyle";
+import { StyledMain } from "../../styles/StyledMainStyle";
 
 //* Animations
-import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../animations/fadeInAnimations";
+import { OneSecondsFadeIn, TwoSecondsFadeIn } from "../../animations/fadeInAnimations";
 
 //* Contexts
-import { UserContext } from "../contexts/UserContext";
-import { TransactionContext } from "../contexts/TransactionContext";
+import { UserContext } from "../../contexts/UserContext";
+import { TransactionContext } from "../../contexts/TransactionContext";
 
-export default function NewTransactionPage() {
+//* Utils
+import updateEntry from "./utils/updateEntry";
+import checkLocalStorageNeedInTransactionInUpdate from "../utils/checkLocalStorageNeedInTransactionInUpdate";
+
+export default function EditTransactionPage() {
 
     const navigate = useNavigate()
 
+    const { transactionBeingUpdated, setTransactionBeingUpdated } = useContext(TransactionContext)
     const { userInfo, setUserInfo } = useContext(UserContext)
-    const { transactionTypeBeingCreated } = useContext(TransactionContext)
 
     const [requestWasSent, setRequestWasSent] = useState(false)
     const [newValue, setNewValue] = useState("")
     const [newDescription, setNewDescription] = useState("")
 
-    function treatValue(value) {
-        return Number(value.replace(",", "."))
-    }
-
-    async function addNewTransaction(e) {
+    async function treatEntry(e) {
         e.preventDefault()
+        
+        const status = await updateEntry(userInfo, setUserInfo, setRequestWasSent, transactionBeingUpdated, setTransactionBeingUpdated, newValue, newDescription)
 
-        setRequestWasSent(true)
-
-        let userInfoUpdated = { ...userInfo }
-
-        if (!userInfo.userId || !userInfo.token) {
-            userInfoUpdated = JSON.parse(localStorage.getItem('userInfo'))
-            setUserInfo(userInfoUpdated)
-        }
-
-        try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
-                value: treatValue(newValue),
-                description: newDescription,
-                type: transactionTypeBeingCreated,
-                date: dayjs(Date.now()).format("DD/MM/YYYY")
-            }, {
-                headers: {
-                    'authorization': 'Bearer ' + userInfoUpdated.token
-                }
-            })
-
+        if (status === 200 || status === 204) {
             setRequestWasSent(false)
-            if (response.status === 201) navigate("/home")
-
-        } catch (err) {
-            console.error(err)
-            if (err.response.status === 422) alert("Preencha todos os campos fornecidos!")
+            setTransactionBeingUpdated(null)
+            return navigate("/home")
+        } else {
             setRequestWasSent(false)
+            alert("Preencha todos os campos fornecidos!")
+            return 
         }
     }
+
+    useEffect(() => {
+        if(!transactionBeingUpdated) checkLocalStorageNeedInTransactionInUpdate(transactionBeingUpdated, setTransactionBeingUpdated)        
+    }, [transactionBeingUpdated])
+
 
     return (
         <UpperWrapper>
@@ -76,7 +61,7 @@ export default function NewTransactionPage() {
                 <StyledHeader>
                     <StyledH1>
                         <OneSecondsFadeIn>
-                            Nova {transactionTypeBeingCreated === "entry" ? "entrada" : "saida"}
+                            Editar {transactionBeingUpdated?.type === "entry" ? "entrada" : "saida"}
                         </OneSecondsFadeIn>
                     </StyledH1>
                     <OneSecondsFadeIn>
@@ -87,7 +72,7 @@ export default function NewTransactionPage() {
                         />
                     </OneSecondsFadeIn>
                 </StyledHeader>
-                <form onSubmit={addNewTransaction}>
+                <form onSubmit={(e) => treatEntry(e)}>
                     <TwoSecondsFadeIn>
                         <StyledInput
                             placeholder="Valor"
@@ -109,7 +94,7 @@ export default function NewTransactionPage() {
                             <InfinitySpin
                                 width='200'
                                 color="#FFFFFF"
-                            /> : <p>Salvar {transactionTypeBeingCreated === "entry" ? "entrada" : "saida"}</p>}
+                            /> : <p>Atualizar {transactionBeingUpdated?.type === "entry" ? "entrada" : "saida"}</p>}
                     </StyledButton>
                 </form>
             </StyledMain>

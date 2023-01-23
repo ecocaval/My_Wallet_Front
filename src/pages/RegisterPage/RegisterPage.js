@@ -2,20 +2,21 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { InfinitySpin } from "react-loader-spinner";
-import axios from "axios";
+
 
 //* Components
-import Logo from "../components/Logo.js";
+import Logo from "../../components/Logo.js";
 
 //* Styles
-import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
-import { StyledMain } from "../styles/StyledMainStyle.js";
-import { StyledButton } from "../styles/StyledButtonStyle.js";
-import { StyledInput } from "../styles/StyledInputStyle.js";
-import { StyledLink } from "../styles/StyledLinkStyle.js";
+import { CenteredWrapper } from "../../styles/CenteredWrapperStyle.js";
+import { StyledMain } from "../../styles/StyledMainStyle.js";
+import { StyledButton } from "../../styles/StyledButtonStyle.js";
+import { StyledInput } from "../../styles/StyledInputStyle.js";
+import { StyledLink } from "../../styles/StyledLinkStyle.js";
 
 //* Animations
-import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
+import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../../animations/fadeInAnimations.js";
+import sendRegister from "./utils/sendRegister.js";
 
 export default function RegisterPage() {
 
@@ -27,35 +28,14 @@ export default function RegisterPage() {
     const [userPassword, setUserPassword] = useState("")
     const [userPasswordConf, setUserPasswordConf] = useState("")
 
-    async function sendRegister(e) {
-        e.preventDefault()
-        setRequestWasSent(true)
-
-        if (userPassword !== userPasswordConf) {
-            alert("The passwords must be the same!")
-            return setRequestWasSent(false)
-        }
-
-        try {
-            const registerResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-up`, {
-                name: userName,
-                email: userEmail,
-                password: userPassword
-            })
-            setRequestWasSent(false)
-            if (registerResponse.status !== 201) return
-            navigate("/")
-        } catch (err) {
-            if(err.response.status === 422) alert("Preencha todos os campos fornecidos!")
-            setRequestWasSent(false)
-        }
-    }
-
     return (
         <CenteredWrapper>
             <StyledMain>
                 <Logo />
-                <form onSubmit={sendRegister}>
+                <form onSubmit={async (e) => {
+                    const response = await sendRegister(e, userPassword, userPasswordConf, setRequestWasSent, userName, userEmail)
+                    if(response.status === 201) navigate("/")
+                }}>
                     <TwoSecondsFadeIn>
                         <OneSecondsFadeInLeft>
                             <StyledInput

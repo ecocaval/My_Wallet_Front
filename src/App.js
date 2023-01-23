@@ -5,13 +5,13 @@ import styled from "styled-components"
 
 //* Styles
 import GlobalStyle from "./styles/GlobalStyle.js"
-import LoginPage from "./pages/LoginPage.js"
-import RegisterPage from "./pages/RegisterPage.js"
+import LoginPage from "./pages/LoginPage/LoginPage.js"
+import RegisterPage from "./pages/RegisterPage/RegisterPage.js"
 
 //* Pages
-import HomePage from "./pages/HomePage.js"
-import EditTransactionPage from "./pages/EditTransactionPage.js"
-import NewTransactionPage from "./pages/NewTransactionPage.js"
+import HomePage from "./pages/HomePage/HomePage.js"
+import EditTransactionPage from "./pages/EditTransaction/EditTransactionPage.js"
+import NewTransactionPage from "./pages/NewTransaction/NewTransactionPage.js"
 
 //* Contexts
 import { UserContext } from "./contexts/UserContext.js"

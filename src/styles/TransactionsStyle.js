@@ -92,7 +92,7 @@ export const MyTransactions = styled.section`
     }
 `
 
-export const Transaction = styled.section`
+export const TransactionStyle = styled.section`
     width: 100%;
     display: flex;
     align-items: center;
@@ -119,7 +119,7 @@ export const TransactionDate = styled.p`
 `
 
 export const TransactionDescription = styled.p`
-    max-width: 120px;
+    max-width: 100px;
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
@@ -132,6 +132,10 @@ export const TransactionDescription = styled.p`
 `
 
 export const TransactionValue = styled.p`
+    max-width: 65px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     font-family: 'Raleway';
     font-weight: 400;
     font-size: 16px;
@@ -161,7 +165,7 @@ export const BalanceValue = styled.p`
     color: ${props => props.balanceIsPositive ? "#03AC00" : "#C70000" };
 `
 
-export const TrashContainer = styled.div`
+export const IconContainer = styled.div`
     width: 20px;
     height: 20px;
     display: flex;

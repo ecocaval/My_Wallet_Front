@@ -1,24 +1,26 @@
 //* Libraries
 import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { InfinitySpin } from 'react-loader-spinner'
 
 //* Components
-import Logo from "../components/Logo.js";
+import Logo from "../../components/Logo.js";
 
 //* Styles
-import { CenteredWrapper } from "../styles/CenteredWrapperStyle.js";
-import { StyledMain } from "../styles/StyledMainStyle.js";
-import { StyledButton } from "../styles/StyledButtonStyle.js";
-import { StyledInput } from "../styles/StyledInputStyle.js";
-import { StyledLink } from "../styles/StyledLinkStyle.js";
+import { CenteredWrapper } from "../../styles/CenteredWrapperStyle.js";
+import { StyledMain } from "../../styles/StyledMainStyle.js";
+import { StyledButton } from "../../styles/StyledButtonStyle.js";
+import { StyledInput } from "../../styles/StyledInputStyle.js";
+import { StyledLink } from "../../styles/StyledLinkStyle.js";
 
 //* Animations
-import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../animations/fadeInAnimations.js";
+import { OneSecondsFadeInRight, OneSecondsFadeInLeft, TwoSecondsFadeIn } from "../../animations/fadeInAnimations.js";
 
 //* Contexts
-import { UserContext } from "../contexts/UserContext.js";
+import { UserContext } from "../../contexts/UserContext.js";
+
+//* Utils
+import sendLogin from "./utils/sendLogin.js";
 
 export default function LoginPage() {
 
@@ -30,41 +32,16 @@ export default function LoginPage() {
     const [userEmail, setUserEmail] = useState("")
     const [userPassword, setUserPassword] = useState("")
 
-    async function sendLogin(e) {
-        e.preventDefault()
-
-        setRequestWasSent(true)
-        setUserInfo({})
-        setUserTransactions([])
-
-        try {
-            const signInResponse = await axios.post(`${process.env.REACT_APP_API_URL}/sign-in`, {
-                email: userEmail,
-                password: userPassword
-            })
-
-            const token = signInResponse.data.token.replace("Bearer ", "")
-            const userId = signInResponse.data.userId
-
-            if (signInResponse.status === 200) {
-                setUserInfo({
-                    userId,
-                    token
-                })
-            }
-            navigate("/home")
-
-        } catch (error) {
-            if (error.name === "AxiosError") alert("Não encontramos uma conta com estes dados!")
-            setRequestWasSent(false)
-        }
-    }
+    localStorage.clear()
 
     return (
         <CenteredWrapper>
             <StyledMain>
                 <Logo />
-                <form onSubmit={sendLogin}>
+                <form onSubmit={async (e) => {
+                    const response = await sendLogin(e, setUserInfo, setUserTransactions, setRequestWasSent, userEmail, userPassword)
+                    if (response.status === 200) navigate("/home")
+                }}>
                     <TwoSecondsFadeIn>
                         <OneSecondsFadeInLeft>
                             <StyledInput
