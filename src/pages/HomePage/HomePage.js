@@ -47,28 +47,34 @@ export default function HomePage() {
     const [activeIndexes, setActiveIndexes] = useState([-1]);
 
     async function getUserInfo() {
+        try {
+            if (!userInfo.token || !userInfo.userId) {
+                const userInfoInLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
 
-        if (!userInfo.token || !userInfo.userId) {
-            const userInfoInLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
-            setUserInfo(userInfoInLocalStorage)
+                setUserInfo(userInfoInLocalStorage)
+                await getUserTransactions(userInfoInLocalStorage)
 
-            getUserTransactions(userInfoInLocalStorage)
-            return
-        }
-
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}`, {
-            headers: {
-                'authorization': 'Bearer ' + userInfo.token
+                return
             }
-        })
 
-        const updatedUserInfo = { ...userInfo, ...response.data }
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}`, {
+                headers: {
+                    'authorization': 'Bearer ' + userInfo.token
+                }
+            })
 
-        setUserInfo(updatedUserInfo)
+            const updatedUserInfo = { ...userInfo, ...response.data }
 
-        localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
+            setUserInfo(updatedUserInfo)
 
-        getUserTransactions(updatedUserInfo)
+            localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
+
+            await getUserTransactions(updatedUserInfo)
+
+        } catch (err) {
+            console.error(err)
+            alert('Houve um erro ao receber as informações do usuário!')
+        }
     }
 
     async function getUserTransactions(userInfoUpdated, index = -1) {
@@ -95,14 +101,16 @@ export default function HomePage() {
                     'authorization': 'Bearer ' + userInfo.token
                 }
             })
-            getUserTransactions(userInfo, index)
+            await getUserTransactions(userInfo, index)
         } catch (err) {
             console.error(err);
             alert("Houve um erro ao tentar deletar sua transação!")
         }
     }
 
-    useEffect(() => getUserInfo, [])
+    useEffect(() => async function getdata() {
+        await getUserInfo()
+    }, [])
 
     useEffect(function treatAnimation() {
         userTransactions.forEach((_, index) => {
@@ -115,66 +123,68 @@ export default function HomePage() {
     return (
         <CenteredWrapper>
             <StyledMain>
-                {userInfoWasReceveid ? (
-                    <>
-                        <StyledHeader>
-                            <StyledH1>
-                                Olá, {userInfo.name}
-                            </StyledH1>
-                            <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
-                        </StyledHeader>
-                        <TransactionsSection thereAreTransactions={userTransactions.length}>
-                            {userTransactions.length ? (
-                                <>
-                                    <MyTransactions>
-                                        {userTransactions.map((transaction, index) => {
-                                            return (
-                                                (isTransactionNew[index] === undefined) ? // if transaction was just created sets the animation
-                                                    (<OneSecondsFadeInLeft key={uuidv4()}>
-                                                        <Transaction transaction={transaction} setTransactionBeingUpdated={setTransactionBeingUpdated} activeIndexes={activeIndexes} setActiveIndexes={setActiveIndexes} index={index} deleteTransaction={deleteTransaction} navigate={navigate} />
+                {userInfoWasReceveid ?
+                    (
+                        <>
+                            <StyledHeader>
+                                <StyledH1>
+                                    Olá, {userInfo.name}
+                                </StyledH1>
+                                <img src={leaveIcon} alt="Leave Icon" onClick={() => navigate("/")} />
+                            </StyledHeader>
+                            <TransactionsSection thereAreTransactions={userTransactions.length}>
+                                {userTransactions.length ? (
+                                    <>
+                                        <MyTransactions>
+                                            {userTransactions.map((transaction, index) => {
+                                                return (
+                                                    (isTransactionNew[index] === undefined) ? // if transaction was just created sets the animation
+                                                        (<OneSecondsFadeInLeft key={uuidv4()}>
+                                                            <Transaction transaction={transaction} setTransactionBeingUpdated={setTransactionBeingUpdated} activeIndexes={activeIndexes} setActiveIndexes={setActiveIndexes} index={index} deleteTransaction={deleteTransaction} navigate={navigate} />
 
-                                                    </OneSecondsFadeInLeft>) : // if transaction is not new no animation occurs
-                                                    <Transaction key={uuidv4()} transaction={transaction} setTransactionBeingUpdated={setTransactionBeingUpdated} activeIndexes={activeIndexes} setActiveIndexes={setActiveIndexes} index={index} deleteTransaction={deleteTransaction} navigate={navigate} />
-                                            )
-                                        }
-                                        ).reverse()}
-                                    </MyTransactions>
-                                    <BalanceSection>
-                                        <BalanceText>SALDO</BalanceText>
-                                        <BalanceValue balanceIsPositive={balanceIsPositive}>
-                                            {calculateBalanceValue(userTransactions, balanceIsPositive, setBalanceIsPositive)}
-                                        </BalanceValue>
-                                    </BalanceSection>
-                                </>
-                            ) :
-                                <OneSecondsFadeIn><NoRegistryText>Não há registros de entrada ou saída</NoRegistryText></OneSecondsFadeIn>
-                            }
-                        </TransactionsSection>
-                        <TransactionButtons>
-                            <TransactionButton onClick={() => {
-                                setTransactionTypeBeingCreated("entry")
-                                localStorage.setItem("transactionType", "entry")
-                                navigate("/nova-entrada")
-                            }}>
-                                <TransactionIcon>
-                                    <img src={circleIcon} alt="Circle Icon" />
-                                    <img src={plusIcon} alt="Plus Icon" />
-                                </TransactionIcon>
-                                <p>Nova entrada</p>
-                            </TransactionButton>
-                            <TransactionButton onClick={() => {
-                                setTransactionTypeBeingCreated("output")
-                                localStorage.setItem("transactionType", "output")
-                                navigate("/nova-saida")
-                            }}>
-                                <TransactionIcon>
-                                    <img src={circleIcon} alt="Circle Icon" />
-                                    <img src={minusIcon} alt="Minus Icon" />
-                                </TransactionIcon>
-                                <p>Nova saída</p>
-                            </TransactionButton>
-                        </TransactionButtons>
-                    </>) : <Loader />}
+                                                        </OneSecondsFadeInLeft>) : // if transaction is not new no animation occurs
+                                                        <Transaction key={uuidv4()} transaction={transaction} setTransactionBeingUpdated={setTransactionBeingUpdated} activeIndexes={activeIndexes} setActiveIndexes={setActiveIndexes} index={index} deleteTransaction={deleteTransaction} navigate={navigate} />
+                                                )
+                                            }
+                                            ).reverse()}
+                                        </MyTransactions>
+                                        <BalanceSection>
+                                            <BalanceText>SALDO</BalanceText>
+                                            <BalanceValue balanceIsPositive={balanceIsPositive}>
+                                                {calculateBalanceValue(userTransactions, balanceIsPositive, setBalanceIsPositive)}
+                                            </BalanceValue>
+                                        </BalanceSection>
+                                    </>
+                                ) :
+                                    <OneSecondsFadeIn><NoRegistryText>Não há registros de entrada ou saída</NoRegistryText></OneSecondsFadeIn>
+                                }
+                            </TransactionsSection>
+                            <TransactionButtons>
+                                <TransactionButton onClick={() => {
+                                    setTransactionTypeBeingCreated("entry")
+                                    localStorage.setItem("transactionType", "entry")
+                                    navigate("/nova-entrada")
+                                }}>
+                                    <TransactionIcon>
+                                        <img src={circleIcon} alt="Circle Icon" />
+                                        <img src={plusIcon} alt="Plus Icon" />
+                                    </TransactionIcon>
+                                    <p>Nova entrada</p>
+                                </TransactionButton>
+                                <TransactionButton onClick={() => {
+                                    setTransactionTypeBeingCreated("output")
+                                    localStorage.setItem("transactionType", "output")
+                                    navigate("/nova-saida")
+                                }}>
+                                    <TransactionIcon>
+                                        <img src={circleIcon} alt="Circle Icon" />
+                                        <img src={minusIcon} alt="Minus Icon" />
+                                    </TransactionIcon>
+                                    <p>Nova saída</p>
+                                </TransactionButton>
+                            </TransactionButtons>
+                        </>
+                    ) : <Loader />}
             </StyledMain>
         </CenteredWrapper>
     )
