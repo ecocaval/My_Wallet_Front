@@ -110,7 +110,9 @@ export default function HomePage() {
         }
     }
 
-    useEffect(() => getUserInfo, [])
+    useEffect(() => {
+        getUserInfo()
+    }, [])
 
     useEffect(function treatAnimation() {
         userTransactions.forEach((_, index) => {
