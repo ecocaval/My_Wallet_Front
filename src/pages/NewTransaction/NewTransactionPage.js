@@ -65,6 +65,7 @@ export default function NewTransactionPage() {
                             type="text"
                             value={newValue}
                             onChange={(e) => setNewValue(e.currentTarget.value)}
+                            disabled={requestWasSent}
                         />
                     </TwoSecondsFadeIn>
                     <TwoSecondsFadeIn>
@@ -73,9 +74,10 @@ export default function NewTransactionPage() {
                             type="text"
                             value={newDescription}
                             onChange={(e) => setNewDescription(e.currentTarget.value)}
+                            disabled={requestWasSent}
                         />
                     </TwoSecondsFadeIn>
-                    <StyledButton type="submit">
+                    <StyledButton type="submit" disabled={requestWasSent}>
                         {requestWasSent ?
                             <InfinitySpin
                                 width='200'

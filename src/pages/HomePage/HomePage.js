@@ -52,7 +52,7 @@ export default function HomePage() {
                 const userInfoInLocalStorage = JSON.parse(localStorage.getItem('userInfo'))
 
                 setUserInfo(userInfoInLocalStorage)
-                await getUserTransactions(userInfoInLocalStorage)
+                getUserTransactions(userInfoInLocalStorage)
 
                 return
             }
@@ -66,18 +66,18 @@ export default function HomePage() {
             const updatedUserInfo = { ...userInfo, ...response.data }
 
             setUserInfo(updatedUserInfo)
-
             localStorage.setItem('userInfo', JSON.stringify(updatedUserInfo))
 
-            await getUserTransactions(updatedUserInfo)
+            getUserTransactions(updatedUserInfo)
 
         } catch (err) {
             console.error(err)
             alert('Houve um erro ao receber as informações do usuário!')
+            navigate("/")
         }
     }
 
-    async function getUserTransactions(userInfoUpdated, index = -1) {
+    async function getUserTransactions(userInfoUpdated, index = activeIndexes.length + 1) {
 
         try {
             const response = await axios.get(`${process.env.REACT_APP_API_URL}/users/${userInfoUpdated.userId}/transactions`, {
@@ -85,6 +85,7 @@ export default function HomePage() {
                     'authorization': 'Bearer ' + userInfoUpdated.token
                 }
             })
+
             setActiveIndexes([...activeIndexes].splice(index, 1))
             setUserTransactions(response.data)
             setUserInfoWasReceveid(true)
@@ -96,21 +97,20 @@ export default function HomePage() {
 
     async function deleteTransaction(transaction, index) {
         try {
-            await axios.delete(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions/${transaction._id}`, {
+            const deleted = await axios.delete(`${process.env.REACT_APP_API_URL}/users/${userInfo.userId}/transactions/${transaction._id}`, {
                 headers: {
                     'authorization': 'Bearer ' + userInfo.token
                 }
             })
-            await getUserTransactions(userInfo, index)
+
+            if(deleted) getUserTransactions(userInfo, index)
         } catch (err) {
             console.error(err);
             alert("Houve um erro ao tentar deletar sua transação!")
         }
     }
 
-    useEffect(() => async function getdata() {
-        await getUserInfo()
-    }, [])
+    useEffect(() => getUserInfo, [])
 
     useEffect(function treatAnimation() {
         userTransactions.forEach((_, index) => {

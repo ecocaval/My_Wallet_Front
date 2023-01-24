@@ -34,7 +34,7 @@ export default function RegisterPage() {
                 <Logo />
                 <form onSubmit={async (e) => {
                     const response = await sendRegister(e, userPassword, userPasswordConf, setRequestWasSent, userName, userEmail)
-                    if(response.status === 201) navigate("/")
+                    if (response.status === 201) navigate("/")
                 }}>
                     <TwoSecondsFadeIn>
                         <OneSecondsFadeInLeft>
@@ -44,6 +44,7 @@ export default function RegisterPage() {
                                 value={userName}
                                 onChange={(e) => setUserName(e.currentTarget.value)}
                                 autoComplete="name"
+                                disabled={requestWasSent}
                             />
                         </OneSecondsFadeInLeft>
                         <OneSecondsFadeInRight>
@@ -53,6 +54,7 @@ export default function RegisterPage() {
                                 value={userEmail}
                                 onChange={(e) => setUserEmail(e.currentTarget.value)}
                                 autoComplete="email"
+                                disabled={requestWasSent}
                             />
                         </OneSecondsFadeInRight>
                         <OneSecondsFadeInLeft>
@@ -62,6 +64,7 @@ export default function RegisterPage() {
                                 value={userPassword}
                                 onChange={(e) => setUserPassword(e.currentTarget.value)}
                                 autoComplete="new-password"
+                                disabled={requestWasSent}
                             />
 
                         </OneSecondsFadeInLeft>
@@ -72,10 +75,13 @@ export default function RegisterPage() {
                                 value={userPasswordConf}
                                 onChange={(e) => setUserPasswordConf(e.currentTarget.value)}
                                 autoComplete="new-password"
+                                disabled={requestWasSent}
                             />
                         </OneSecondsFadeInRight>
                     </TwoSecondsFadeIn>
-                    <StyledButton>
+                    <StyledButton
+                        disabled={requestWasSent}
+                    >
                         {requestWasSent ?
                             <InfinitySpin
                                 width='200'

@@ -50,6 +50,7 @@ export default function LoginPage() {
                                 value={userEmail}
                                 onChange={(e) => setUserEmail(e.currentTarget.value)}
                                 autoComplete="email"
+                                disabled={requestWasSent}
                             />
                         </OneSecondsFadeInLeft>
                         <OneSecondsFadeInRight>
@@ -59,11 +60,13 @@ export default function LoginPage() {
                                 value={userPassword}
                                 onChange={(e) => setUserPassword(e.currentTarget.value)}
                                 autoComplete="current-password"
+                                disabled={requestWasSent}
                             />
                         </OneSecondsFadeInRight>
                     </TwoSecondsFadeIn>
                     <StyledButton
                         type="submit"
+                        disabled={requestWasSent}
                     >
                         {requestWasSent ?
                             <InfinitySpin
